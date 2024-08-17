@@ -16,6 +16,9 @@ WORKDIR /app/frontend
 # Install project dependencies
 RUN npm install
 
+# Install @types/node
+RUN npm install --save-dev @types/node
+
 # Copy the rest of the application code
 COPY . .
 
