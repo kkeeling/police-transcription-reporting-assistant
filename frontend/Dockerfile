@@ -4,8 +4,8 @@ FROM node:18
 # Set the working directory in the container
 WORKDIR /app
 
-# Install Vite globally
-RUN npm install -g create-vite
+# Install Vite and create-vite globally
+RUN npm install -g vite create-vite
 
 # Create a new Vite project with React and TypeScript
 RUN create-vite frontend --template react-ts
