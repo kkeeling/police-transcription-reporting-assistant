@@ -1,6 +1,6 @@
 # Police Transcription & Report Generation Frontend
 
-This is the frontend for the Police Transcription & Report Generation application.
+This is the frontend for the Police Transcription & Report Generation application, built with React and Vite.
 
 ## Prerequisites
 
@@ -14,38 +14,29 @@ This is the frontend for the Police Transcription & Report Generation applicatio
    cd <repository-name>
    ```
 
-2. Navigate to the frontend directory:
-   ```
-   cd frontend
-   ```
-
-3. Build the Docker image:
+2. Build the Docker image:
    ```
    docker build -t police-transcription-frontend .
    ```
 
-4. Run the Docker container:
+3. Run the Docker container:
    ```
    docker run -p 5173:5173 police-transcription-frontend
    ```
 
-5. Once the container is running, you can access the application at:
+4. Once the container is running, you can access the application at:
    ```
    http://localhost:5173
    ```
 
-Note: If you have Docker Compose installed, you can use the following command instead of steps 3 and 4:
+Note: If you have Docker Compose installed, you can use the following command:
 ```
 docker-compose up --build
 ```
 
-If you don't have Docker Compose and want to install it, follow these steps:
-1. Visit the official Docker Compose installation guide: https://docs.docker.com/compose/install/
-2. Follow the instructions for your operating system to install Docker Compose.
-
 ## Development
 
-The application is set up with hot-reloading. Any changes you make to the source files will automatically trigger a rebuild, and you'll see the changes reflected in the browser.
+The application is set up with Vite, which provides fast hot module replacement (HMR). Any changes you make to the source files will be immediately reflected in the browser without a full page reload.
 
 ## Project Structure
 
@@ -55,8 +46,16 @@ The application is set up with hot-reloading. Any changes you make to the source
   - `services/`: Service files for API calls, data processing, etc.
 - `public/`: Contains static assets
 - `Dockerfile`: Defines the Docker image for the frontend
+- `vite.config.ts`: Vite configuration file
+- `tsconfig.json`: TypeScript configuration file
 - `package.json`: Lists the project dependencies and scripts
 
 ## Additional Information
 
 For more detailed information about the project structure and conventions, please refer to the CONVENTIONS.md file in the root directory of the project.
+
+## Vite and React
+
+This project uses Vite as the build tool and development server. Vite offers extremely fast cold starts and instant hot module replacement (HMR). 
+
+React is set up with TypeScript for type safety and better developer experience. The project structure follows React best practices and is ready for scalable application development.
