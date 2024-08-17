@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Requirements: Police Transcription & Report Generation App</title>
+</head>
+<body>
+    <h1>Core Requirements: Police Transcription & Report Generation App</h1>
+
+    <h2>1. Audio Recording and File Handling</h2>
+    <ul>
+        <li>1.1 The app must allow officers to record audio directly through the web interface</li>
+        <li>1.2 Officers must be able to pause and resume recordings</li>
+        <li>1.3 The app must provide a visual indication of active recording</li>
+        <li>1.4 The app must support uploading of a single existing audio file</li>
+        <li>1.5 The app must process the uploaded audio file and discard it once transcription is complete</li>
+    </ul>
+
+    <h2>2. Real-time Transcription</h2>
+    <ul>
+        <li>2.1 The app must provide real-time transcription of live audio recordings</li>
+        <li>2.2 The app must transcribe the uploaded audio file upon submission</li>
+        <li>2.3 Transcription must be highly accurate and support police-specific terminology</li>
+    </ul>
+
+    <h2>3. Transcription Review and Editing</h2>
+    <ul>
+        <li>3.1 Officers must not be able to edit transcriptions while actively recording</li>
+        <li>3.2 The app must allow officers to pause recording to enable editing of the transcription</li>
+        <li>3.3 The app must provide an intuitive interface for editing transcribed text when paused</li>
+        <li>3.4 Resuming recording must disable editing of the existing transcription</li>
+        <li>3.5 New transcribed audio must be appended to the end of the edited transcript upon resuming recording</li>
+        <li>3.6 Edits to transcriptions must be reflected in the final report</li>
+    </ul>
+
+    <h2>4. Report Generation</h2>
+    <ul>
+        <li>4.1 The app must use local Large Language Models (LLMs) for report generation</li>
+        <li>4.2 The app must maintain a set of static prompts that define the required reporting format and standards</li>
+        <li>4.3 The app must use these static prompts to guide the LLMs in generating reports based on the transcribed and edited content</li>
+        <li>4.4 The app must ensure that generated reports consistently adhere to the specified police reporting standards</li>
+        <li>4.5 The app must display generated reports in Markdown format</li>
+        <li>4.6 Officers must be able to toggle between Markdown view and an editable text field</li>
+    </ul>
+
+    <h2>5. Report Editing and Export</h2>
+    <ul>
+        <li>5.1 The app must allow officers to edit the generated report</li>
+        <li>5.2 Officers must be able to export the final report as a PDF</li>
+    </ul>
+
+    <h2>6. User Interface and Experience</h2>
+    <ul>
+        <li>6.1 The app must have a responsive web design compatible with various devices</li>
+        <li>6.2 The user interface must be intuitive and require minimal training for officers</li>
+        <li>6.3 The app must provide clear visual feedback for all user actions</li>
+        <li>6.4 The app must clearly indicate when editing is enabled or disabled based on recording status</li>
+    </ul>
+
+    <h2>7. Performance</h2>
+    <ul>
+        <li>7.1 Real-time transcription must have minimal lag (less than 2 seconds)</li>
+        <li>7.2 The app must be able to process audio recordings up to 2 hours in length</li>
+    </ul>
+
+    <h2>8. Data Handling and Security</h2>
+    <ul>
+        <li>8.1 The app must not store audio files beyond the duration of a single session</li>
+        <li>8.2 The app must ensure that all session data is cleared when the user closes the application or refreshes the page</li>
+        <li>8.3 The app must implement basic security measures to protect against common web vulnerabilities</li>
+    </ul>
+
+    <h2>9. Integration and Deployment</h2>
+    <ul>
+        <li>9.1 The app must be deployable as a Docker container</li>
+        <li>9.2 The app must integrate with specified local LLMs for report generation</li>
+        <li>9.3 The app must use websockets for real-time communication with the front end</li>
+    </ul>
+</body>
+</html>

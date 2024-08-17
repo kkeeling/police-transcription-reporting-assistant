@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Plan: Police Transcription & Report Generation App MVP</title>
+</head>
+<body>
+    <h1>Project Plan: Police Transcription & Report Generation App MVP</h1>
+
+    <h2>Overview</h2>
+    <p>This project plan outlines the development process for the MVP of the Police Transcription & Report Generation App. The plan is divided into 5 one-week sprints, focusing on implementing the frontend and backend within Docker containers from the start, ensuring a consistent development and deployment environment.</p>
+
+    <h2>Team Composition</h2>
+    <ul>
+        <li>1 Product Manager</li>
+        <li>1 Developer</li>
+        <li>1 Tester</li>
+    </ul>
+
+    <h2>Sprint Plan</h2>
+
+    <h3>Sprint 1: Project Setup, Docker Configuration, and Basic Frontend Structure</h3>
+    <ul>
+        <li>Set up the development environment</li>
+        <li>Create Docker configuration for frontend development</li>
+        <li>Initialize the React project with Vite within a Docker container</li>
+        <li>Set up Tailwind CSS and shadcn/ui in the Docker environment</li>
+        <li>Create basic layout and navigation structure</li>
+        <li>Implement basic routing in the frontend</li>
+        <li>Create placeholder components for main features</li>
+        <li>Set up Docker Compose for easy management of frontend container</li>
+    </ul>
+
+    <h3>Sprint 2: Frontend - Audio Recording, Transcription UI, and Backend Docker Setup</h3>
+    <ul>
+        <li>Implement audio recording interface</li>
+        <li>Create file upload component for existing audio files</li>
+        <li>Develop UI for displaying real-time transcription (with mock data)</li>
+        <li>Implement pause/resume functionality for recording</li>
+        <li>Create transcription editing interface</li>
+        <li>Set up Docker configuration for backend development</li>
+        <li>Initialize FastAPI backend within a Docker container</li>
+        <li>Update Docker Compose to include both frontend and backend services</li>
+    </ul>
+
+    <h3>Sprint 3: Frontend - Report Generation and Editing UI, Backend Basic Setup</h3>
+    <ul>
+        <li>Develop interface for initiating report generation</li>
+        <li>Create Markdown editor for report viewing and editing</li>
+        <li>Implement toggle between Markdown and rich text editing</li>
+        <li>Design UI for displaying generated reports</li>
+        <li>Create PDF export functionality (frontend part)</li>
+        <li>Implement basic error handling and user feedback mechanisms in UI</li>
+        <li>Set up WebSocket server for real-time communication in backend container</li>
+        <li>Create basic API endpoints in backend for frontend to interact with</li>
+    </ul>
+
+    <h3>Sprint 4: Backend Development and Integration</h3>
+    <ul>
+        <li>Integrate Insanely Fast Whisper for audio transcription in backend container</li>
+        <li>Create API endpoints for audio upload and transcription</li>
+        <li>Implement real-time transcription streaming</li>
+        <li>Update frontend to use real backend for audio processing and transcription</li>
+        <li>Integrate Ollama for local LLM management in backend container</li>
+        <li>Begin implementation of Mixture-of-Agents approach for report generation</li>
+        <li>Develop API endpoints for report generation</li>
+        <li>Basic error handling and logging in backend</li>
+    </ul>
+
+    <h3>Sprint 5: Final Integration, Optimization, and Deployment Preparation</h3>
+    <ul>
+        <li>Complete Mixture-of-Agents implementation for report generation</li>
+        <li>Create static prompts for police report formatting</li>
+        <li>Integrate backend report generation with frontend</li>
+        <li>Implement PDF export functionality (backend part)</li>
+        <li>Optimize Docker configurations for both frontend and backend</li>
+        <li>Ensure all services are correctly configured in Docker Compose</li>
+        <li>Conduct thorough testing of all features in the Docker environment</li>
+        <li>Fix any identified bugs or issues</li>
+        <li>Create documentation for Docker deployment and usage</li>
+        <li>Prepare demo script for showcasing the application</li>
+        <li>Test deployment on a separate machine using Docker Compose</li>
+    </ul>
+
+    <h2>Post-MVP Considerations</h2>
+    <ul>
+        <li>Gather user feedback and prioritize additional features</li>
+        <li>Plan for security enhancements and auditing</li>
+        <li>Consider scalability improvements for larger deployments</li>
+        <li>Explore integration with existing police database systems</li>
+        <li>Investigate additional AI-powered features for report improvement</li>
+        <li>Further optimize Docker configuration for production environments</li>
+    </ul>
+
+    <h2>Risk Management</h2>
+    <ul>
+        <li>Monitor performance of real-time transcription and address any latency issues</li>
+        <li>Regularly assess the accuracy of transcriptions and generated reports</li>
+        <li>Keep track of LLM and Insanely Fast Whisper updates for potential improvements</li>
+        <li>Maintain open communication with end-users (police officers) for continual feedback</li>
+        <li>Continuously monitor and optimize resource usage in Docker containers</li>
+        <li>Ensure all team members are proficient with Docker for smooth development and deployment</li>
+        <li>Regularly test the entire application stack using Docker Compose to catch integration issues early</li>
+    </ul>
+</body>
+</html>

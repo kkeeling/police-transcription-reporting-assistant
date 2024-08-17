@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design & Technical Solution: Police Transcription & Report Generation App</title>
+</head>
+<body>
+    <h1>Design & Technical Solution: Police Transcription & Report Generation App</h1>
+
+    <h2>1. System Architecture</h2>
+    <p>The application will follow a client-server architecture with real-time communication capabilities:</p>
+    <ul>
+        <li>Frontend: React-based single-page application (SPA)</li>
+        <li>Backend: Python-based server using FastAPI</li>
+        <li>Real-time Communication: WebSocket protocol for live updates</li>
+        <li>Containerization: Docker for easy deployment</li>
+    </ul>
+
+    <h2>2. Key Technologies</h2>
+    <ul>
+        <li>Frontend: React, Vite, shadcn/ui, Tailwind CSS</li>
+        <li>Backend: Python, FastAPI, WebSockets</li>
+        <li>Transcription: Insanely Fast Whisper</li>
+        <li>Language Models: Ollama (for local LLM integration)</li>
+        <li>Report Generation: Mixture-of-Agents (MoA) approach</li>
+        <li>Containerization: Docker</li>
+    </ul>
+
+    <h2>3. Component Details</h2>
+
+    <h3>3.1 Frontend (React SPA)</h3>
+    <ul>
+        <li>Responsive design using Tailwind CSS and shadcn/ui components</li>
+        <li>Audio recording and file upload functionality</li>
+        <li>Real-time display of transcription using WebSocket connection</li>
+        <li>Markdown editor for report viewing and editing</li>
+        <li>PDF export functionality</li>
+    </ul>
+
+    <h3>3.2 Backend (FastAPI Server)</h3>
+    <ul>
+        <li>RESTful API endpoints for non-real-time operations</li>
+        <li>WebSocket server for real-time communication</li>
+        <li>Integration with Insanely Fast Whisper for transcription</li>
+        <li>Integration with Ollama for local LLM management</li>
+        <li>Implementation of Mixture-of-Agents for report generation</li>
+    </ul>
+
+    <h3>3.3 Transcription Service (Insanely Fast Whisper)</h3>
+    <ul>
+        <li>High-speed, accurate transcription of audio input</li>
+        <li>Support for real-time transcription of ongoing recordings</li>
+        <li>Handling of uploaded audio files</li>
+    </ul>
+
+    <h3>3.4 Language Model Integration (Ollama)</h3>
+    <ul>
+        <li>Local deployment and management of LLMs</li>
+        <li>API for interacting with multiple LLM models</li>
+        <li>Support for model switching and version control</li>
+    </ul>
+
+    <h3>3.5 Report Generation (Mixture-of-Agents)</h3>
+    <ul>
+        <li>Implementation of multi-layer MoA architecture</li>
+        <li>Integration of multiple LLM models for enhanced report quality</li>
+        <li>Use of static prompts to ensure adherence to police reporting standards</li>
+    </ul>
+
+    <h2>4. Data Flow</h2>
+    <ol>
+        <li>User records audio or uploads an audio file through the frontend</li>
+        <li>Audio data is sent to the backend server</li>
+        <li>Backend routes audio to Insanely Fast Whisper for transcription</li>
+        <li>Transcription results are sent back to the frontend in real-time via WebSocket</li>
+        <li>User edits and finalizes the transcription</li>
+        <li>Finalized transcription is sent to the report generation service</li>
+        <li>MoA-based report generation service processes the transcription using multiple LLMs</li>
+        <li>Generated report is sent back to the frontend for display and further editing</li>
+        <li>User can export the final report as a PDF</li>
+    </ol>
+
+    <h2>5. Security Considerations</h2>
+    <ul>
+        <li>Implementation of HTTPS for all client-server communications</li>
+        <li>Use of secure WebSocket connections (WSS)</li>
+        <li>Server-side validation of all user inputs</li>
+        <li>Secure handling of temporary audio files and transcriptions</li>
+    </ul>
+
+    <h2>6. Scalability and Performance</h2>
+    <ul>
+        <li>Use of asynchronous programming in the backend for improved performance</li>
+        <li>Optimization of LLM inference for faster report generation</li>
+        <li>Efficient WebSocket management for handling multiple concurrent users</li>
+    </ul>
+
+    <h2>7. Deployment</h2>
+    <ul>
+        <li>Local deployment for initial testing and use</li>
+        <li>Docker containerization for potential future deployment scenarios</li>
+    </ul>
+
+    <h2>8. Testing</h2>
+    <p>For this MVP, testing will be conducted through actual use of the application. No formal testing strategy is implemented at this stage.</p>
+
+    <h2>9. Future Enhancements</h2>
+    <ul>
+        <li>Integration with police database systems for automatic data population</li>
+        <li>Implementation of voice recognition for officer identification</li>
+        <li>Addition of multi-language support for diverse communities</li>
+        <li>Development of a mobile application for on-the-go use</li>
+        <li>Integration of AI-powered suggestions for report improvement</li>
+    </ul>
+</body>
+</html>

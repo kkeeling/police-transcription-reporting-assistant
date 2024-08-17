@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Stories: Sprint 1 - Project Setup and Basic Frontend Structure</title>
+</head>
+<body>
+    <h1>User Stories: Sprint 1 - Project Setup and Basic Frontend Structure</h1>
+
+    <h2>US-1.1: Docker Environment Setup</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> set up a Docker environment for the frontend development,<br>
+    <strong>So that</strong> I can ensure a consistent development experience across the team and match the production environment.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Docker is installed and configured on the development machine</li>
+        <li>A Dockerfile is created for the frontend React application</li>
+        <li>The Dockerfile includes all necessary dependencies for a React and Vite setup</li>
+        <li>A Docker image can be built successfully from the Dockerfile</li>
+        <li>A container can be run from the image, exposing the necessary ports for development</li>
+    </ul>
+
+    <h2>US-1.2: React Project Initialization</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> initialize a new React project using Vite within the Docker container,<br>
+    <strong>So that</strong> I can start developing the frontend of the application in a containerized environment.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A new React project is created using Vite inside the Docker container</li>
+        <li>The project structure is set up according to best practices</li>
+        <li>The application can be started and accessed through a web browser</li>
+        <li>Hot reloading is working correctly in the Docker environment</li>
+    </ul>
+
+    <h2>US-1.3: Tailwind CSS and shadcn/ui Setup</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> set up Tailwind CSS and shadcn/ui in the Docker environment,<br>
+    <strong>So that</strong> I can use these tools for styling and building UI components efficiently.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Tailwind CSS is installed and configured in the project</li>
+        <li>shadcn/ui is set up and ready to use</li>
+        <li>A sample component is created using Tailwind classes to verify the setup</li>
+        <li>A sample shadcn/ui component is added to the project to verify its integration</li>
+    </ul>
+
+    <h2>US-1.4: Basic Application Layout</h2>
+    <p><strong>As a</strong> user,<br>
+    <strong>I want to</strong> see a basic layout of the application when I access it,<br>
+    <strong>So that</strong> I can understand the overall structure of the interface.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A header component is created with a title "Police Transcription & Report Generation"</li>
+        <li>A navigation menu is implemented with placeholder links for main features</li>
+        <li>A main content area is defined where the primary application content will be displayed</li>
+        <li>A footer component is added with basic information</li>
+        <li>The layout is responsive and looks good on both desktop and mobile devices</li>
+    </ul>
+
+    <h2>US-1.5: Routing Setup</h2>
+    <p><strong>As a</strong> user,<br>
+    <strong>I want to</strong> navigate between different sections of the application,<br>
+    <strong>So that</strong> I can access various features easily.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>React Router is installed and configured in the project</li>
+        <li>Routes are set up for main sections: Home, Transcription, Report Generation</li>
+        <li>Clicking on navigation menu items changes the URL and displays the correct component</li>
+        <li>A 404 Not Found page is implemented for invalid routes</li>
+    </ul>
+
+    <h2>US-1.6: Placeholder Components</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> create placeholder components for the main features,<br>
+    <strong>So that</strong> I have a structure in place for future development.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A placeholder AudioRecorder component is created</li>
+        <li>A placeholder Transcription component is created</li>
+        <li>A placeholder ReportGeneration component is created</li>
+        <li>Each placeholder component displays a message indicating its purpose</li>
+        <li>Placeholder components are integrated into the routing system</li>
+    </ul>
+
+    <h2>US-1.7: Docker Compose Configuration</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> set up a Docker Compose file for the frontend service,<br>
+    <strong>So that</strong> I can easily manage the Docker container and prepare for future backend integration.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A docker-compose.yml file is created in the root of the project</li>
+        <li>The frontend service is defined in the Docker Compose file</li>
+        <li>Environment variables are properly configured in the Docker Compose file</li>
+        <li>The application can be started using `docker-compose up`</li>
+        <li>Changes to the code are reflected in the running container without need for rebuild</li>
+    </ul>
+</body>
+</html>
