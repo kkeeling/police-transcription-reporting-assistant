@@ -8,34 +8,35 @@
 <body>
     <h1>User Stories: Sprint 1 - Project Setup and Basic Frontend Structure</h1>
 
-    <h2>US-1.1: Docker Environment Setup</h2>
+    <p><strong>Note:</strong> Docker deployment will be handled at the end of the project. The development environment will not use Docker to simplify the initial setup and development process.</p>
+
+    <h2>US-1.1: Development Environment Setup</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> set up a Docker environment for the frontend development,<br>
-    <strong>So that</strong> I can ensure a consistent development experience across the team and match the production environment.</p>
+    <strong>I want to</strong> set up a local development environment for the frontend,<br>
+    <strong>So that</strong> I can start developing the application efficiently.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Docker is installed and configured on the development machine</li>
-        <li>A Dockerfile is created for the frontend React application</li>
-        <li>The Dockerfile includes all necessary dependencies for a React and Vite setup</li>
-        <li>A Docker image can be built successfully from the Dockerfile</li>
-        <li>A container can be run from the image, exposing the necessary ports for development</li>
+        <li>Node.js and npm are installed on the development machine</li>
+        <li>Git is installed and configured for version control</li>
+        <li>A code editor (e.g., VS Code) is set up with appropriate extensions for React development</li>
+        <li>The project repository is created and cloned locally</li>
     </ul>
 
     <h2>US-1.2: React Project Initialization</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> initialize a new React project using Vite within the Docker container,<br>
-    <strong>So that</strong> I can start developing the frontend of the application in a containerized environment.</p>
+    <strong>I want to</strong> initialize a new React project using Vite,<br>
+    <strong>So that</strong> I can start developing the frontend of the application.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>A new React project is created using Vite inside the Docker container</li>
+        <li>A new React project is created using Vite</li>
         <li>The project structure is set up according to best practices</li>
         <li>The application can be started and accessed through a web browser</li>
-        <li>Hot reloading is working correctly in the Docker environment</li>
+        <li>Hot reloading is working correctly in the development environment</li>
     </ul>
 
     <h2>US-1.3: Tailwind CSS and shadcn/ui Setup</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> set up Tailwind CSS and shadcn/ui in the Docker environment,<br>
+    <strong>I want to</strong> set up Tailwind CSS and shadcn/ui in the project,<br>
     <strong>So that</strong> I can use these tools for styling and building UI components efficiently.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
@@ -81,19 +82,6 @@
         <li>A placeholder ReportGeneration component is created</li>
         <li>Each placeholder component displays a message indicating its purpose</li>
         <li>Placeholder components are integrated into the routing system</li>
-    </ul>
-
-    <h2>US-1.7: Docker Compose Configuration</h2>
-    <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> set up a Docker Compose file for the frontend service,<br>
-    <strong>So that</strong> I can easily manage the Docker container and prepare for future backend integration.</p>
-    <h3>Acceptance Criteria:</h3>
-    <ul>
-        <li>A docker-compose.yml file is created in the root of the project</li>
-        <li>The frontend service is defined in the Docker Compose file</li>
-        <li>Environment variables are properly configured in the Docker Compose file</li>
-        <li>The application can be started using `docker-compose up`</li>
-        <li>Changes to the code are reflected in the running container without need for rebuild</li>
     </ul>
 </body>
 </html>
