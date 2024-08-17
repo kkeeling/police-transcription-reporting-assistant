@@ -4,17 +4,20 @@ FROM node:18
 # Set the working directory in the container
 WORKDIR /app
 
-# Create a new Vite React project
-RUN npm create vite@latest . -- --template react-ts
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
 # Install project dependencies
 RUN npm install
 
-# Install additional dependencies
-RUN npm install react-router-dom @types/react-router-dom
+# Copy the rest of the application code
+COPY . .
+
+# Build the app
+RUN npm run build
 
 # Expose the port the app runs on
 EXPOSE 5173
 
 # Define the command to run the app
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

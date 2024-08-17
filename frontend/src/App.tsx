@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 
-function App() {
+export function App() {
   return (
     <div className="App">
       <h1>Police Transcription & Report Generation</h1>
@@ -9,5 +9,3 @@ function App() {
     </div>
   )
 }
-
-export default App
