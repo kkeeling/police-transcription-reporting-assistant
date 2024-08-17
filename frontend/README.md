@@ -5,7 +5,6 @@ This is the frontend for the Police Transcription & Report Generation applicatio
 ## Prerequisites
 
 - Docker
-- Docker Compose
 
 ## Setup and Running
 
@@ -20,15 +19,29 @@ This is the frontend for the Police Transcription & Report Generation applicatio
    cd frontend
    ```
 
-3. Build and run the Docker container:
+3. Build the Docker image:
    ```
-   docker-compose up --build
+   docker build -t police-transcription-frontend .
    ```
 
-4. Once the container is running, you can access the application at:
+4. Run the Docker container:
+   ```
+   docker run -p 5173:5173 police-transcription-frontend
+   ```
+
+5. Once the container is running, you can access the application at:
    ```
    http://localhost:5173
    ```
+
+Note: If you have Docker Compose installed, you can use the following command instead of steps 3 and 4:
+```
+docker-compose up --build
+```
+
+If you don't have Docker Compose and want to install it, follow these steps:
+1. Visit the official Docker Compose installation guide: https://docs.docker.com/compose/install/
+2. Follow the instructions for your operating system to install Docker Compose.
 
 ## Development
 
