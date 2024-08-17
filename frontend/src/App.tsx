@@ -4,7 +4,7 @@ import Navigation from './components/Navigation'
 import Footer from './components/Footer'
 import SampleComponent from './components/SampleComponent'
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
