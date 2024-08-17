@@ -4,8 +4,14 @@ FROM node:18
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Install Vite globally
+RUN npm install -g create-vite
+
+# Create a new Vite project with React and TypeScript
+RUN create-vite frontend --template react-ts
+
+# Set the working directory to the new project
+WORKDIR /app/frontend
 
 # Install project dependencies
 RUN npm install
@@ -20,4 +26,4 @@ RUN npm run build
 EXPOSE 5173
 
 # Define the command to run the app
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
