@@ -1,5 +1,6 @@
 import React, { useState, useRef, ChangeEvent } from 'react'
 import { Button } from "./ui/button"
+import { transcribeAudio } from '../api/mockApiService'
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false)
@@ -10,6 +11,8 @@ const PoliceReportGenerator: React.FC = () => {
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [recordingError, setRecordingError] = useState<string | null>(null)
   const [playbackError, setPlaybackError] = useState<string | null>(null)
+  const [isTranscribing, setIsTranscribing] = useState(false)
+  const [transcriptionError, setTranscriptionError] = useState<string | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -114,8 +117,20 @@ const PoliceReportGenerator: React.FC = () => {
     }
   }
 
-  const handleGenerateReport = () => {
-    // Implement report generation logic here
+  const handleGenerateReport = async () => {
+    if (audioBlob) {
+      setIsTranscribing(true);
+      setTranscriptionError(null);
+      try {
+        const result = await transcribeAudio(audioBlob);
+        setTranscription(result);
+      } catch (error) {
+        console.error('Transcription error:', error);
+        setTranscriptionError('Failed to transcribe audio. Please try again.');
+      } finally {
+        setIsTranscribing(false);
+      }
+    }
   }
 
   return (
@@ -192,9 +207,15 @@ const PoliceReportGenerator: React.FC = () => {
       <Button 
         onClick={handleGenerateReport}
         className="bg-white hover:bg-gray-100 text-black mt-4"
+        disabled={!audioBlob || isTranscribing}
       >
-        Generate Report
+        {isTranscribing ? 'Transcribing...' : 'Generate Report'}
       </Button>
+      {transcriptionError && (
+        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {transcriptionError}
+        </div>
+      )}
     </div>
   )
 }
