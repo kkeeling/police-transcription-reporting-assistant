@@ -184,37 +184,37 @@ const PoliceReportGenerator: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">Police Report Generator</h2>
-      <p className="mb-4">
+    <div className="space-y-4 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4">Police Report Generator</h2>
+      <p className="mb-4 text-sm sm:text-base">
         Upload an audio file or dictate your report and let the AI handle the
         formatting.
       </p>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4">
         <Button
           onClick={handleStartRecording}
           disabled={isRecording}
-          className="bg-gray-600 hover:bg-gray-700 text-white"
+          className="bg-gray-600 hover:bg-gray-700 text-white w-full sm:w-auto"
         >
           Start Recording
         </Button>
         <Button
           onClick={handleEndRecording}
           disabled={!isRecording}
-          className="bg-gray-600 hover:bg-gray-700 text-white"
+          className="bg-gray-600 hover:bg-gray-700 text-white w-full sm:w-auto"
         >
           End Recording
         </Button>
         <Button
           onClick={handlePlay}
           disabled={!audioBlob}
-          className="bg-gray-600 hover:bg-gray-700 text-white"
+          className="bg-gray-600 hover:bg-gray-700 text-white w-full sm:w-auto"
         >
           {isPlaying ? "Pause" : "Play"}
         </Button>
         <Button
           onClick={handleUploadAudio}
-          className="bg-white hover:bg-gray-100 text-black"
+          className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
           Upload Audio
         </Button>
@@ -248,8 +248,8 @@ const PoliceReportGenerator: React.FC = () => {
         </div>
       )}
       <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
-        <h3 className="text-xl font-semibold mb-2">Transcription</h3>
-        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] max-h-[400px] overflow-y-auto">
+        <h3 className="text-xl sm:text-2xl font-semibold mb-2">Transcription</h3>
+        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto">
           {isTranscribing ? (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
               <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
@@ -265,7 +265,7 @@ const PoliceReportGenerator: React.FC = () => {
       </div>
       <Button
         onClick={handleGenerateReport}
-        className="bg-white hover:bg-gray-100 text-black mt-4"
+        className="bg-white hover:bg-gray-100 text-black mt-4 w-full sm:w-auto"
         disabled={!audioBlob || isTranscribing}
       >
         {isTranscribing ? "Transcribing..." : "Generate Report"}
