@@ -1,22 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from "./ui/button"
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [transcription, setTranscription] = useState('')
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef = useRef<Blob[]>([])
 
-  const handleStartRecording = () => {
-    setIsRecording(true)
-    // Implement recording logic here
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      mediaRecorderRef.current = new MediaRecorder(stream)
+      
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunksRef.current.push(event.data)
+        }
+      }
+
+      mediaRecorderRef.current.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
+        setAudioBlob(blob)
+        chunksRef.current = []
+      }
+
+      mediaRecorderRef.current.start()
+      setIsRecording(true)
+    } catch (error) {
+      console.error('Error starting recording:', error)
+    }
   }
 
   const handleEndRecording = () => {
-    setIsRecording(false)
-    // Implement stop recording logic here
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      setIsRecording(false)
+    }
   }
 
   const handlePlay = () => {
-    // Implement play audio logic here
+    if (audioBlob) {
+      const audio = new Audio(URL.createObjectURL(audioBlob))
+      audio.play()
+    }
   }
 
   const handleUploadAudio = () => {
@@ -48,6 +75,7 @@ const PoliceReportGenerator: React.FC = () => {
         </Button>
         <Button 
           onClick={handlePlay}
+          disabled={!audioBlob}
           className="bg-gray-600 hover:bg-gray-700 text-white"
         >
           Play
@@ -59,6 +87,12 @@ const PoliceReportGenerator: React.FC = () => {
           Upload Audio
         </Button>
       </div>
+      {isRecording && (
+        <div className="mt-4 flex items-center">
+          <div className="w-4 h-4 bg-red-500 rounded-full mr-2 animate-pulse"></div>
+          <span>Recording...</span>
+        </div>
+      )}
       <div className="bg-gray-800 p-4 rounded-lg min-h-[200px] mt-6">
         <p className="text-gray-400">{transcription || 'Transcription will appear here...'}</p>
       </div>
