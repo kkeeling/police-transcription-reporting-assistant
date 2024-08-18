@@ -8,6 +8,8 @@ const PoliceReportGenerator: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackProgress, setPlaybackProgress] = useState(0)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [recordingError, setRecordingError] = useState<string | null>(null)
+  const [playbackError, setPlaybackError] = useState<string | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -32,15 +34,23 @@ const PoliceReportGenerator: React.FC = () => {
 
       mediaRecorderRef.current.start()
       setIsRecording(true)
+      setRecordingError(null)
     } catch (error) {
       console.error('Error starting recording:', error)
+      setRecordingError('Failed to start recording. Please check your microphone permissions.')
     }
   }
 
   const handleEndRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop()
-      setIsRecording(false)
+      try {
+        mediaRecorderRef.current.stop()
+        setIsRecording(false)
+        setRecordingError(null)
+      } catch (error) {
+        console.error('Error stopping recording:', error)
+        setRecordingError('Failed to stop recording. Please try again.')
+      }
     }
   }
 
@@ -56,14 +66,24 @@ const PoliceReportGenerator: React.FC = () => {
           const progress = (audioRef.current!.currentTime / audioRef.current!.duration) * 100
           setPlaybackProgress(progress)
         })
+        audioRef.current.addEventListener('error', (e) => {
+          console.error('Audio playback error:', e)
+          setPlaybackError('Failed to play audio. Please try again.')
+        })
       }
 
-      if (isPlaying) {
-        audioRef.current.pause()
-        setIsPlaying(false)
-      } else {
-        audioRef.current.play()
-        setIsPlaying(true)
+      try {
+        if (isPlaying) {
+          audioRef.current.pause()
+          setIsPlaying(false)
+        } else {
+          audioRef.current.play()
+          setIsPlaying(true)
+        }
+        setPlaybackError(null)
+      } catch (error) {
+        console.error('Playback error:', error)
+        setPlaybackError('Failed to play audio. Please try again.')
       }
     }
   }
@@ -83,6 +103,9 @@ const PoliceReportGenerator: React.FC = () => {
           const blob = new Blob([e.target?.result as ArrayBuffer], { type: file.type })
           setAudioBlob(blob)
           setUploadError(null)
+        }
+        reader.onerror = () => {
+          setUploadError('Failed to read the audio file. Please try again.')
         }
         reader.readAsArrayBuffer(file)
       } else {
@@ -151,9 +174,9 @@ const PoliceReportGenerator: React.FC = () => {
           </div>
         </div>
       )}
-      {uploadError && (
-        <div className="mt-4 text-red-500">
-          {uploadError}
+      {(recordingError || uploadError || playbackError) && (
+        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {recordingError || uploadError || playbackError}
         </div>
       )}
       <div className="bg-gray-800 p-4 rounded-lg mt-6">
