@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Stories: Sprint 2 - Audio Recording and Transcription UI</title>
+</head>
+<body>
+    <h1>User Stories: Sprint 2 - Audio Recording and Transcription UI</h1>
+
+    <h2>US-2.1: Implement Audio Recording Functionality</h2>
+    <p><strong>As a</strong> police officer,<br>
+    <strong>I want to</strong> record audio directly through the web interface,<br>
+    <strong>So that</strong> I can easily capture my spoken report.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>The "Start Recording" button initiates audio recording when clicked</li>
+        <li>The "End Recording" button stops the recording when clicked</li>
+        <li>Visual feedback is provided to indicate active recording (e.g., a red recording indicator)</li>
+        <li>The recorded audio is stored temporarily in the browser</li>
+    </ul>
+
+    <h2>US-2.2: Implement Audio Playback</h2>
+    <p><strong>As a</strong> police officer,<br>
+    <strong>I want to</strong> play back the audio I've recorded,<br>
+    <strong>So that</strong> I can review my report before submitting it for transcription.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>The "Play" button becomes active after a recording is made or an audio file is uploaded</li>
+        <li>Clicking the "Play" button plays the recorded or uploaded audio</li>
+        <li>Audio playback can be paused and resumed</li>
+        <li>A progress indicator shows the current position in the audio playback</li>
+    </ul>
+
+    <h2>US-2.3: Implement Audio File Upload</h2>
+    <p><strong>As a</strong> police officer,<br>
+    <strong>I want to</strong> upload an existing audio file,<br>
+    <strong>So that</strong> I can transcribe pre-recorded reports.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>The "Upload Audio" button opens a file selection dialog</li>
+        <li>Users can select and upload audio files in common formats (e.g., MP3, WAV)</li>
+        <li>The uploaded file name is displayed after successful upload</li>
+        <li>An error message is shown if an unsupported file type is selected</li>
+    </ul>
+
+    <h2>US-2.4: Display Transcription Area</h2>
+    <p><strong>As a</strong> police officer,<br>
+    <strong>I want to</strong> see a designated area for the transcription,<br>
+    <strong>So that</strong> I can review and edit the transcribed text.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A text area is provided to display the transcription</li>
+        <li>The text area shows a placeholder message when no transcription is available</li>
+        <li>The text area is styled to be easily readable</li>
+        <li>The text area is large enough to display a substantial amount of text without scrolling</li>
+    </ul>
+
+    <h2>US-2.5: Implement Basic Error Handling</h2>
+    <p><strong>As a</strong> user,<br>
+    <strong>I want to</strong> see clear error messages if something goes wrong,<br>
+    <strong>So that</strong> I understand what the issue is and how to proceed.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Error messages are displayed if audio recording fails to start or stop</li>
+        <li>An error message is shown if an unsupported file type is uploaded</li>
+        <li>Error messages are clearly visible and use user-friendly language</li>
+        <li>Error states are handled gracefully without crashing the application</li>
+    </ul>
+
+    <h2>US-2.6: Set Up Axios for API Calls</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> set up Axios in the React application,<br>
+    <strong>So that</strong> we have a robust solution for making API calls to our backend.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Axios is installed and configured in the React project</li>
+        <li>A base API configuration is set up (e.g., base URL, headers)</li>
+        <li>A centralized file or module is created for managing API calls</li>
+        <li>Basic error handling for API calls is implemented using Axios interceptors</li>
+    </ul>
+
+    <h2>US-2.7: Prepare for Backend Integration Using Axios</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> set up the groundwork for backend integration using Axios,<br>
+    <strong>So that</strong> we can easily connect to the transcription service in future sprints.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A mock API service is created to simulate backend responses</li>
+        <li>Axios is used to make mock API calls to the simulated backend service</li>
+        <li>Placeholder Axios functions are created for sending audio data to the backend</li>
+        <li>Placeholder Axios functions are created for receiving transcription data from the backend</li>
+        <li>The mock API calls are integrated into the relevant components (e.g., audio recording, file upload)</li>
+    </ul>
+
+    <h2>US-2.8: Enhance UI Responsiveness</h2>
+    <p><strong>As a</strong> user,<br>
+    <strong>I want to</strong> use the application on different devices,<br>
+    <strong>So that</strong> I can record and transcribe reports from my desktop, tablet, or smartphone.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>The UI layout adjusts appropriately for desktop, tablet, and mobile screen sizes</li>
+        <li>All buttons and interactive elements are easily tappable on touch screens</li>
+        <li>The transcription area resizes appropriately on different screen sizes</li>
+        <li>The application is usable and visually appealing across different devices</li>
+    </ul>
+</body>
+</html>
