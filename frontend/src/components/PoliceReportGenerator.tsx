@@ -156,12 +156,19 @@ const PoliceReportGenerator: React.FC = () => {
           {uploadError}
         </div>
       )}
-      <div className="bg-gray-800 p-4 rounded-lg min-h-[200px] mt-6">
-        <p className="text-gray-400">{transcription || 'Transcription will appear here...'}</p>
+      <div className="bg-gray-800 p-4 rounded-lg mt-6">
+        <h3 className="text-xl font-semibold mb-2">Transcription</h3>
+        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] max-h-[400px] overflow-y-auto">
+          {transcription ? (
+            <p className="text-gray-200 whitespace-pre-wrap">{transcription}</p>
+          ) : (
+            <p className="text-gray-400 italic">Transcription will appear here...</p>
+          )}
+        </div>
       </div>
       <Button 
         onClick={handleGenerateReport}
-        className="bg-white hover:bg-gray-100 text-black"
+        className="bg-white hover:bg-gray-100 text-black mt-4"
       >
         Generate Report
       </Button>
