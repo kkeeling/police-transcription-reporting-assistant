@@ -57,24 +57,31 @@ const PoliceReportGenerator: React.FC = () => {
 
         console.log("Recording stopped");
         // Wait for the 'onstop' event to fire and create the audioBlob
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => {
+          const onStop = () => {
+            mediaRecorderRef.current?.removeEventListener('stop', onStop);
+            resolve(null);
+          };
+          mediaRecorderRef.current?.addEventListener('stop', onStop);
+        });
 
         console.log("Audio blob created");
-        console.log(audioBlob);
-        if (audioBlob) {
-          setIsTranscribing(true);
-          setTranscriptionError(null);
-          try {
-            const result = await transcribeAudio(audioBlob);
-            setTranscription(result);
-          } catch (error) {
-            console.error("Transcription error:", error);
-            setTranscriptionError(
-              "Failed to transcribe audio. Please try again."
-            );
-          } finally {
-            setIsTranscribing(false);
-          }
+        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        setAudioBlob(blob);
+        console.log(blob);
+        
+        setIsTranscribing(true);
+        setTranscriptionError(null);
+        try {
+          const result = await transcribeAudio(blob);
+          setTranscription(result);
+        } catch (error) {
+          console.error("Transcription error:", error);
+          setTranscriptionError(
+            "Failed to transcribe audio. Please try again."
+          );
+        } finally {
+          setIsTranscribing(false);
         }
       } catch (error) {
         console.error("Error stopping recording:", error);
