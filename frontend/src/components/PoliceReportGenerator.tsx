@@ -247,10 +247,14 @@ const PoliceReportGenerator: React.FC = () => {
           {recordingError || uploadError || playbackError}
         </div>
       )}
-      <div className="bg-gray-800 p-4 rounded-lg mt-6">
+      <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
         <h3 className="text-xl font-semibold mb-2">Transcription</h3>
         <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] max-h-[400px] overflow-y-auto">
-          {transcription ? (
+          {isTranscribing ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : transcription ? (
             <p className="text-gray-200 whitespace-pre-wrap">{transcription}</p>
           ) : (
             <p className="text-gray-400 italic">
