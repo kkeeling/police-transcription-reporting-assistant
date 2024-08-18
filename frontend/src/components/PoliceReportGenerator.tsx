@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, ChangeEvent } from 'react'
 import { Button } from "./ui/button"
 
 const PoliceReportGenerator: React.FC = () => {
@@ -7,9 +7,11 @@ const PoliceReportGenerator: React.FC = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackProgress, setPlaybackProgress] = useState(0)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleStartRecording = async () => {
     try {
@@ -67,7 +69,26 @@ const PoliceReportGenerator: React.FC = () => {
   }
 
   const handleUploadAudio = () => {
-    // Implement upload audio logic here
+    if (fileInputRef.current) {
+      fileInputRef.current.click()
+    }
+  }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      if (file.type.startsWith('audio/')) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const blob = new Blob([e.target?.result as ArrayBuffer], { type: file.type })
+          setAudioBlob(blob)
+          setUploadError(null)
+        }
+        reader.readAsArrayBuffer(file)
+      } else {
+        setUploadError('Please upload a valid audio file.')
+      }
+    }
   }
 
   const handleGenerateReport = () => {
@@ -106,6 +127,13 @@ const PoliceReportGenerator: React.FC = () => {
         >
           Upload Audio
         </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="audio/*"
+          className="hidden"
+        />
       </div>
       {isRecording && (
         <div className="mt-4 flex items-center">
@@ -121,6 +149,11 @@ const PoliceReportGenerator: React.FC = () => {
               style={{ width: `${playbackProgress}%` }}
             ></div>
           </div>
+        </div>
+      )}
+      {uploadError && (
+        <div className="mt-4 text-red-500">
+          {uploadError}
         </div>
       )}
       <div className="bg-gray-800 p-4 rounded-lg min-h-[200px] mt-6">
