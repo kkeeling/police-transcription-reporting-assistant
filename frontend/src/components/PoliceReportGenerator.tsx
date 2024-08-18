@@ -44,12 +44,29 @@ const PoliceReportGenerator: React.FC = () => {
     }
   }
 
-  const handleEndRecording = () => {
+  const handleEndRecording = async () => {
     if (mediaRecorderRef.current && isRecording) {
       try {
         mediaRecorderRef.current.stop()
         setIsRecording(false)
         setRecordingError(null)
+        
+        // Wait for the 'onstop' event to fire and create the audioBlob
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        if (audioBlob) {
+          setIsTranscribing(true)
+          setTranscriptionError(null)
+          try {
+            const result = await transcribeAudio(audioBlob)
+            setTranscription(result)
+          } catch (error) {
+            console.error('Transcription error:', error)
+            setTranscriptionError('Failed to transcribe audio. Please try again.')
+          } finally {
+            setIsTranscribing(false)
+          }
+        }
       } catch (error) {
         console.error('Error stopping recording:', error)
         setRecordingError('Failed to stop recording. Please try again.')
@@ -97,15 +114,27 @@ const PoliceReportGenerator: React.FC = () => {
     }
   }
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       if (file.type.startsWith('audio/')) {
         const reader = new FileReader()
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const blob = new Blob([e.target?.result as ArrayBuffer], { type: file.type })
           setAudioBlob(blob)
           setUploadError(null)
+          
+          setIsTranscribing(true)
+          setTranscriptionError(null)
+          try {
+            const result = await transcribeAudio(blob)
+            setTranscription(result)
+          } catch (error) {
+            console.error('Transcription error:', error)
+            setTranscriptionError('Failed to transcribe audio. Please try again.')
+          } finally {
+            setIsTranscribing(false)
+          }
         }
         reader.onerror = () => {
           setUploadError('Failed to read the audio file. Please try again.')
