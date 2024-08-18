@@ -5,8 +5,11 @@ const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false)
   const [transcription, setTranscription] = useState('')
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [playbackProgress, setPlaybackProgress] = useState(0)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handleStartRecording = async () => {
     try {
@@ -41,8 +44,25 @@ const PoliceReportGenerator: React.FC = () => {
 
   const handlePlay = () => {
     if (audioBlob) {
-      const audio = new Audio(URL.createObjectURL(audioBlob))
-      audio.play()
+      if (!audioRef.current) {
+        audioRef.current = new Audio(URL.createObjectURL(audioBlob))
+        audioRef.current.addEventListener('ended', () => {
+          setIsPlaying(false)
+          setPlaybackProgress(0)
+        })
+        audioRef.current.addEventListener('timeupdate', () => {
+          const progress = (audioRef.current!.currentTime / audioRef.current!.duration) * 100
+          setPlaybackProgress(progress)
+        })
+      }
+
+      if (isPlaying) {
+        audioRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        audioRef.current.play()
+        setIsPlaying(true)
+      }
     }
   }
 
@@ -78,7 +98,7 @@ const PoliceReportGenerator: React.FC = () => {
           disabled={!audioBlob}
           className="bg-gray-600 hover:bg-gray-700 text-white"
         >
-          Play
+          {isPlaying ? 'Pause' : 'Play'}
         </Button>
         <Button 
           onClick={handleUploadAudio}
@@ -91,6 +111,16 @@ const PoliceReportGenerator: React.FC = () => {
         <div className="mt-4 flex items-center">
           <div className="w-4 h-4 bg-red-500 rounded-full mr-2 animate-pulse"></div>
           <span>Recording...</span>
+        </div>
+      )}
+      {audioBlob && (
+        <div className="mt-4">
+          <div className="bg-gray-200 h-2 rounded-full">
+            <div 
+              className="bg-blue-500 h-2 rounded-full" 
+              style={{ width: `${playbackProgress}%` }}
+            ></div>
+          </div>
         </div>
       )}
       <div className="bg-gray-800 p-4 rounded-lg min-h-[200px] mt-6">
