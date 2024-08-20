@@ -9,11 +9,11 @@ dependencies:
   - python-multipart=0.0.6
   - pydantic=2.4.2
   - pip
+  - transformers
+  - optimum
+  - torch
   - pip:
     - email-validator==2.0.0.post2
-    - torch
-    - transformers
-    - optimum
     - accelerate
     - flash-attn
     - insanely-fast-whisper==0.0.15
