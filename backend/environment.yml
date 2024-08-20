@@ -11,3 +11,9 @@ dependencies:
   - pip
   - pip:
     - email-validator==2.0.0.post2
+    - torch
+    - transformers
+    - optimum
+    - accelerate
+    - flash-attn
+    - insanely-fast-whisper==0.0.15

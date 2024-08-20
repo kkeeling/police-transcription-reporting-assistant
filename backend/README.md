@@ -7,6 +7,7 @@ This is the backend for the Police Transcription & Report Generation project. It
 ### Prerequisites
 
 - [Conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda or Anaconda)
+- [Ollama](https://ollama.com/download) (for running language models)
 
 ### Setting up the development environment
 
@@ -25,6 +26,10 @@ This is the backend for the Police Transcription & Report Generation project. It
    ```
    conda activate police-transcription-backend
    ```
+
+4. Install Ollama:
+   - Visit https://ollama.com/download and follow the instructions for your operating system.
+   - After installation, run `ollama run llama3.1` to download and test the Llama 3.1 model.
 
 ## Running the backend
 
@@ -49,8 +54,46 @@ This is the backend for the Police Transcription & Report Generation project. It
 
 ## Testing
 
-(Add information about running tests once they are set up)
+To run the test script for Insanely Fast Whisper:
+```
+python tests/test_whisper.py
+```
 
 ## Deployment
 
 (Add information about deployment process once it's established)
+
+## Configuring Insanely Fast Whisper
+
+Insanely Fast Whisper is already included in the Conda environment. To use it in your code:
+
+```python
+from transformers import pipeline
+from optimum.bettertransformer import BetterTransformer
+
+pipe = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3", device="cuda")
+pipe.model = BetterTransformer.transform(pipe.model)
+
+# Use the pipeline for transcription
+result = pipe("audio.mp3")
+```
+
+## Configuring Ollama
+
+Ollama is installed separately. To use it in your Python code:
+
+```python
+import requests
+
+def query_ollama(prompt, model="llama3.1"):
+    response = requests.post("http://localhost:11434/api/generate", json={
+        "model": model,
+        "prompt": prompt
+    })
+    return response.json()["response"]
+
+# Example usage
+result = query_ollama("Summarize this transcript: ...")
+```
+
+Remember to start the Ollama service before using it in your code.
