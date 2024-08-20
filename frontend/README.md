@@ -1,50 +1,75 @@
-# React + TypeScript + Vite
+# Police Transcription & Report Generation Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the Police Transcription & Report Generation project. It's built using React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js (version 14 or later)
+- npm (usually comes with Node.js)
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Clone the repository and navigate to the frontend directory:
+   ```
+   git clone <repository-url>
+   cd <repository-name>/frontend
+   ```
 
-- Configure the top-level `parserOptions` property like this:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Development
+
+To start the development server:
+
+```
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+This will start the Vite development server. The application will be available at `http://localhost:5173` by default.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Building for Production
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+To create a production build:
+
 ```
+npm run build
+```
+
+This will generate optimized files in the `dist` directory.
+
+## Testing
+
+To run tests:
+
+```
+npm run test
+```
+
+## Linting
+
+To run the linter:
+
+```
+npm run lint
+```
+
+## Project Structure
+
+- `src/`: Contains the source code
+  - `components/`: React components
+  - `pages/`: Page components
+  - `api/`: API service functions
+  - `styles/`: Global styles and CSS modules
+  - `utils/`: Utility functions
+- `public/`: Static assets
+
+## Contributing
+
+Please follow the coding conventions outlined in the CONVENTIONS.md file in the root of the project.
+
+## Additional Information
+
+For more details on the Vite configuration and available scripts, refer to the Vite documentation: https://vitejs.dev/guide/
