@@ -3,102 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Stories: Sprint 3 - Backend Integration and Report Generation</title>
+    <title>User Stories: Sprint 3 - Backend Setup and Initial Integration</title>
 </head>
 <body>
-    <h1>User Stories: Sprint 3 - Backend Integration and Report Generation</h1>
+    <h1>User Stories: Sprint 3 - Backend Setup and Initial Integration</h1>
 
-    <h2>US-3.1: Implement Backend Audio Transcription</h2>
+    <h2>US-3.1: Set up FastAPI Backend Environment</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> implement audio transcription on the backend using Insanely Fast Whisper,<br>
-    <strong>So that</strong> we can accurately convert audio to text for report generation.</p>
+    <strong>I want to</strong> set up a FastAPI backend environment,<br>
+    <strong>So that</strong> we have a robust and scalable foundation for our application's server-side logic.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Set up Insanely Fast Whisper in the backend environment</li>
-        <li>Create an API endpoint to receive audio files or streams</li>
-        <li>Implement transcription logic using Insanely Fast Whisper</li>
-        <li>Return transcribed text to the frontend via API response</li>
-        <li>Handle potential errors and provide appropriate error messages</li>
+        <li>FastAPI is installed and configured in a new Python environment</li>
+        <li>A basic FastAPI application structure is created</li>
+        <li>The server can be started and responds to a basic health check endpoint</li>
+        <li>Environment variables are properly configured for different settings (development, production)</li>
+        <li>Requirements are documented in a requirements.txt file</li>
     </ul>
 
-    <h2>US-3.2: Integrate Frontend with Transcription API</h2>
-    <p><strong>As a</strong> police officer,<br>
-    <strong>I want to</strong> see my recorded or uploaded audio transcribed in real-time,<br>
-    <strong>So that</strong> I can review and edit the transcription if necessary.</p>
-    <h3>Acceptance Criteria:</h3>
-    <ul>
-        <li>Use Axios to send audio data to the backend transcription API</li>
-        <li>Display a loading indicator while transcription is in progress</li>
-        <li>Update the transcription area with the received text in real-time</li>
-        <li>Allow users to edit the transcribed text if needed</li>
-        <li>Implement error handling for failed API calls</li>
-    </ul>
-
-    <h2>US-3.3: Create System and User Prompts for LLMs</h2>
+    <h2>US-3.2: Configure Backend Dependencies</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> create effective system and user prompts for the LLMs,<br>
-    <strong>So that</strong> we can generate accurate and well-structured police reports from the transcriptions.</p>
+    <strong>I want to</strong> configure all necessary backend dependencies,<br>
+    <strong>So that</strong> we can implement transcription and report generation features.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Research and define the standard structure and content of police reports</li>
-        <li>Create a system prompt that instructs the LLM on the desired report format and style</li>
-        <li>Develop user prompts that effectively combine the transcription with instructions for report generation</li>
-        <li>Include prompts for different sections of the report (e.g., incident details, witness statements, etc.)</li>
-        <li>Test the prompts with sample transcriptions to ensure they produce the desired report structure</li>
-        <li>Implement a mechanism to easily update and maintain these prompts in the backend</li>
+        <li>Insanely Fast Whisper is installed and configured in the backend environment</li>
+        <li>Ollama is set up and ready for use with the backend</li>
+        <li>Any additional libraries required for audio processing are installed</li>
+        <li>All dependencies are documented in the requirements.txt file</li>
+        <li>Basic test scripts are created to verify the functionality of each major dependency</li>
     </ul>
 
-    <h2>US-3.4: Implement Report Generation Backend</h2>
+    <h2>US-3.3: Implement API Endpoint for Audio File Upload and Transcription</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> implement report generation using the Mixture-of-Agents approach with Ollama,<br>
-    <strong>So that</strong> we can create well-formatted police reports from transcriptions.</p>
+    <strong>I want to</strong> create an API endpoint for uploading audio files for transcription,<br>
+    <strong>So that</strong> users can transcribe pre-recorded audio files.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Set up Ollama in the backend environment</li>
-        <li>Implement the Mixture-of-Agents approach for report generation</li>
-        <li>Create an API endpoint to receive transcribed text and generate reports</li>
-        <li>Integrate the system and user prompts created in US-3.3 into the report generation process</li>
-        <li>Ensure generated reports follow the required police report format</li>
-        <li>Handle potential errors in the report generation process</li>
+        <li>An endpoint for receiving audio file uploads is created</li>
+        <li>The endpoint can handle common audio file formats (e.g., MP3, WAV)</li>
+        <li>Uploaded files are properly validated for format and size</li>
+        <li>The endpoint triggers the transcription process using Insanely Fast Whisper</li>
+        <li>Transcription results are returned in a structured format</li>
+        <li>Proper error handling is implemented for file upload and transcription processes</li>
+        <li>The endpoint is tested with various audio files to ensure correct functionality</li>
     </ul>
 
-    <h2>US-3.5: Integrate Frontend with Report Generation API</h2>
-    <p><strong>As a</strong> police officer,<br>
-    <strong>I want to</strong> generate a formatted report from my transcription,<br>
-    <strong>So that</strong> I can quickly create standardized police reports.</p>
+    <h2>US-3.4: Implement WebSocket Endpoint for Streaming Audio Transcription</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> create a WebSocket endpoint for streaming audio transcription,<br>
+    <strong>So that</strong> users can get real-time transcription of their speech.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Implement functionality for the "Generate Report" button using Axios</li>
-        <li>Send transcribed text to the backend report generation API</li>
-        <li>Display a loading indicator while the report is being generated</li>
-        <li>Show the generated report in a new view or modal</li>
-        <li>Allow users to edit the generated report if needed</li>
-        <li>Implement error handling for failed API calls</li>
+        <li>A WebSocket endpoint is created for receiving streaming audio data</li>
+        <li>The endpoint can handle real-time audio streams in a suitable format (e.g., PCM)</li>
+        <li>Incoming audio stream is properly processed and fed into Insanely Fast Whisper</li>
+        <li>Transcription results are sent back to the client in real-time</li>
+        <li>The WebSocket connection handles interruptions and reconnections gracefully</li>
+        <li>Proper error handling is implemented for streaming and transcription processes</li>
+        <li>The endpoint is tested with various audio inputs to ensure real-time transcription accuracy</li>
     </ul>
 
-    <h2>US-3.6: Implement Report Editing and Formatting</h2>
-    <p><strong>As a</strong> police officer,<br>
-    <strong>I want to</strong> edit and format the generated report,<br>
-    <strong>So that</strong> I can make necessary adjustments before finalizing it.</p>
+    <h2>US-3.5: Implement Health Check and API Documentation</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> implement a health check endpoint and generate API documentation,<br>
+    <strong>So that</strong> we can monitor the API's status and have clear documentation for all endpoints.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Create a rich text editor for report editing</li>
-        <li>Implement basic formatting options (bold, italic, bullet points, etc.)</li>
-        <li>Allow users to add or remove sections in the report</li>
-        <li>Ensure the edited report maintains the required police report structure</li>
+        <li>A health check endpoint is implemented to verify the API is running</li>
+        <li>The health check returns appropriate status codes and basic system information</li>
+        <li>API documentation is automatically generated using FastAPI's built-in tools</li>
+        <li>Documentation includes clear descriptions of all endpoints, request/response formats, and example usage</li>
+        <li>Documentation is easily accessible through a designated URL</li>
     </ul>
 
-    <h2>US-3.7: Implement PDF Export</h2>
-    <p><strong>As a</strong> police officer,<br>
-    <strong>I want to</strong> export my generated report as a PDF,<br>
-    <strong>So that</strong> I can easily share or print the final document.</p>
+    <h2>US-3.6: Implement CORS and Security Measures</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> implement CORS and basic security measures,<br>
+    <strong>So that</strong> our application is secure and can properly handle cross-origin requests.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Add a "Export to PDF" button in the report view</li>
-        <li>Implement PDF generation on the backend using a suitable library</li>
-        <li>Create an API endpoint for PDF generation and download</li>
-        <li>Ensure the PDF maintains the formatting and structure of the report</li>
-        <li>Allow users to download the generated PDF</li>
+        <li>CORS is properly configured to allow requests from the frontend application</li>
+        <li>Basic rate limiting is implemented to prevent abuse</li>
+        <li>Input validation is added to all API endpoints</li>
+        <li>Security headers are properly set (e.g., X-XSS-Protection, X-Content-Type-Options)</li>
+    </ul>
+
+    <h2>US-3.7: Create Initial Frontend-Backend Integration</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> create an initial integration between the frontend and backend,<br>
+    <strong>So that</strong> we can verify end-to-end communication for audio transcription.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Frontend is updated to send audio data to the backend endpoint</li>
+        <li>WebSocket connection is established from frontend for real-time audio streaming</li>
+        <li>Error handling for failed API calls and WebSocket errors is implemented in the frontend</li>
+        <li>Loading states are properly managed in the frontend during transcription</li>
+    </ul>
+
+    <h2>US-3.8: Implement Audio Transcription Logic</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> implement the audio transcription feature,<br>
+    <strong>So that</strong> we can convert spoken words into text for report generation.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Insanely Fast Whisper is integrated to transcribe incoming audio data</li>
+        <li>Real-time transcription is implemented for streaming audio via WebSocket</li>
+        <li>Transcription results are sent back to the frontend in real-time</li>
+        <li>Error handling for transcription failures is implemented</li>
+        <li>Performance metrics for transcription (e.g., time taken, accuracy) are logged</li>
+    </ul>
+
+    <h2>US-3.9: Begin Creating System and User Prompts for LLMs</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> start creating system and user prompts for our LLMs,<br>
+    <strong>So that</strong> we can prepare for implementing the report generation feature.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>Research is conducted on effective prompt engineering for police report generation</li>
+        <li>Initial system prompts are drafted for the report generation LLM</li>
+        <li>A template for user prompts is created, incorporating placeholders for transcription data</li>
+        <li>A simple test harness is set up to evaluate prompt effectiveness with Ollama</li>
+        <li>Documentation is started for the prompt engineering process and decisions</li>
     </ul>
 </body>
 </html>
