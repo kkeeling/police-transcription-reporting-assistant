@@ -12,11 +12,9 @@ dependencies:
   - pip
   - transformers
   - optimum
-  - pytorch
-  - torchvision
-  - torchaudio
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pytorch::torchaudio
   - pip:
     - email-validator==2.0.0.post2
-    - accelerate
-    - flash-attn
     - insanely-fast-whisper==0.0.15
