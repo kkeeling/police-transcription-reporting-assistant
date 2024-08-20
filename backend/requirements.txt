@@ -1,1 +1,3 @@
 # This file is kept for reference, but dependencies are now managed in environment.yml
+# If you're not using Conda, you can install dependencies from this file using:
+# pip install -r requirements.txt
