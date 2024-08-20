@@ -1,5 +1,6 @@
 name: police-transcription-backend
 channels:
+  - pytorch
   - conda-forge
   - defaults
 dependencies:
@@ -11,7 +12,9 @@ dependencies:
   - pip
   - transformers
   - optimum
-  - torch
+  - pytorch
+  - torchvision
+  - torchaudio
   - pip:
     - email-validator==2.0.0.post2
     - accelerate
