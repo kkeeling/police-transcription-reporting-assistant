@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import os
-import whisper
+import openai_whisper as whisper
 
 app = FastAPI()
 
