@@ -1,11 +1,11 @@
 import unittest
 from transformers import pipeline
-from optimum.bettertransformer import BetterTransformer
+import torch
 
 class TestInsanelyFastWhisper(unittest.TestCase):
     def setUp(self):
-        self.pipe = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3")
-        self.pipe.model = BetterTransformer.transform(self.pipe.model)
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.pipe = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3", device=device)
 
     def test_whisper_initialization(self):
         self.assertIsNotNone(self.pipe, "Whisper pipeline should be initialized")
