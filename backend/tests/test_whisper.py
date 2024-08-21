@@ -1,6 +1,7 @@
 import unittest
 from transformers import pipeline
 import torch
+import os
 
 class TestInsanelyFastWhisper(unittest.TestCase):
     def setUp(self):
@@ -11,11 +12,16 @@ class TestInsanelyFastWhisper(unittest.TestCase):
         self.assertIsNotNone(self.pipe, "Whisper pipeline should be initialized")
 
     def test_whisper_transcription(self):
-        # This is a basic test. In a real scenario, you'd use a short audio file.
-        test_text = "Hello, this is a test."
-        result = self.pipe(test_text)
+        # Use a real audio file for testing
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        test_audio_path = os.path.join(current_dir, "test_audio.wav")
+        
+        self.assertTrue(os.path.exists(test_audio_path), f"Test audio file not found: {test_audio_path}")
+        
+        result = self.pipe(test_audio_path)
         self.assertIsNotNone(result, "Transcription result should not be None")
         self.assertIn("text", result, "Transcription result should contain 'text' key")
+        self.assertNotEqual(result["text"].strip(), "", "Transcription result should not be empty")
 
 if __name__ == '__main__':
     unittest.main()
