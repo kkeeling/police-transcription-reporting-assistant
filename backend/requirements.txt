@@ -1,7 +1,8 @@
 # Dependencies for the Police Transcription & Report Generation API
-fastapi==0.68.0
-uvicorn==0.15.0
-pydantic==1.8.2
-python-multipart==0.0.5
-openai-whisper==20230314
-websockets==10.3
+fastapi==0.103.2
+uvicorn==0.23.2
+pydantic==2.4.2
+python-multipart==0.0.6
+websockets==11.0.3
+insanely-fast-whisper==0.0.15
+email-validator==2.0.0.post2

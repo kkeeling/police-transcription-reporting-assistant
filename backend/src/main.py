@@ -3,13 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import os
-import openai_whisper as whisper
 import asyncio
+from insanely_fast_whisper import WhisperModel
 
 app = FastAPI()
 
-# Load Whisper model globally
-model = whisper.load_model("base")
+# Initialize Whisper model globally
+model = WhisperModel("base", device="cpu", compute_type="int8")
 
 # Configure CORS
 app.add_middleware(
@@ -53,20 +53,17 @@ async def upload_audio(file: UploadFile = File(...)):
         temp_file.write(content)
     
     try:
-        # Load Whisper model
-        model = whisper.load_model("base")
-        
         # Transcribe audio
-        result = model.transcribe(temp_file_path)
+        segments, info = model.transcribe(temp_file_path)
         
         # Prepare response
         response = TranscriptionResponse(
-            text=result["text"],
+            text=" ".join([segment.text for segment in segments]),
             segments=[{
-                "start": segment["start"],
-                "end": segment["end"],
-                "text": segment["text"]
-            } for segment in result["segments"]]
+                "start": segment.start,
+                "end": segment.end,
+                "text": segment.text
+            } for segment in segments]
         )
         
         return response
@@ -91,16 +88,16 @@ async def transcribe_stream(websocket: WebSocket):
             
             try:
                 # Transcribe audio
-                result = model.transcribe(temp_file_path)
+                segments, info = model.transcribe(temp_file_path)
                 
                 # Prepare and send response
                 response = TranscriptionResponse(
-                    text=result["text"],
+                    text=" ".join([segment.text for segment in segments]),
                     segments=[{
-                        "start": segment["start"],
-                        "end": segment["end"],
-                        "text": segment["text"]
-                    } for segment in result["segments"]]
+                        "start": segment.start,
+                        "end": segment.end,
+                        "text": segment.text
+                    } for segment in segments]
                 )
                 await websocket.send_json(response.dict())
             finally:
