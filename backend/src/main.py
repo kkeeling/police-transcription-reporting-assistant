@@ -93,6 +93,15 @@ async def upload_audio(file: UploadFile = File(...)):
 async def transcribe_stream(websocket: WebSocket):
     await websocket.accept()
     try:
+        # Initialize the pipeline
+        pipe = pipeline(
+            "automatic-speech-recognition",
+            model="openai/whisper-large-v3",
+            torch_dtype=torch.float16,
+            device="cuda:0" if torch.cuda.is_available() else "cpu",
+            model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
+        )
+
         while True:
             audio_data = await websocket.receive_bytes()
             
@@ -103,16 +112,21 @@ async def transcribe_stream(websocket: WebSocket):
             
             try:
                 # Transcribe audio
-                result = transcribe_file(temp_file_path, model_name="base", device="cpu", compute_type="int8")
+                result = pipe(
+                    temp_file_path,
+                    chunk_length_s=30,
+                    batch_size=24,
+                    return_timestamps=True,
+                )
                 
                 # Prepare and send response
                 response = TranscriptionResponse(
                     text=result["text"],
                     segments=[{
-                        "start": segment["start"],
-                        "end": segment["end"],
+                        "start": segment["timestamp"][0],
+                        "end": segment["timestamp"][1],
                         "text": segment["text"]
-                    } for segment in result["segments"]]
+                    } for segment in result["chunks"]]
                 )
                 await websocket.send_json(response.dict())
             finally:
