@@ -39,22 +39,31 @@ async def read_root():
 async def health_check():
     return {"status": "healthy"}
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
 async def upload_audio(file: UploadFile = File(...)):
+    logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
+        logger.warning(f"Invalid file format: {file.filename}")
         raise HTTPException(status_code=400, detail="Invalid file format. Only MP3 and WAV files are allowed.")
     
     content = await file.read()
     if len(content) > MAX_FILE_SIZE:
+        logger.warning(f"File size exceeds limit: {len(content)} bytes")
         raise HTTPException(status_code=400, detail="File size exceeds the maximum limit of 10 MB.")
     
     # Save the file temporarily
     temp_file_path = f"temp_{file.filename}"
     with open(temp_file_path, "wb") as temp_file:
         temp_file.write(content)
+    logger.info(f"Temporary file saved: {temp_file_path}")
     
     try:
-        # Initialize the pipeline
+        logger.info("Initializing pipeline")
         pipe = pipeline(
             "automatic-speech-recognition",
             model="openai/whisper-large-v3",
@@ -63,7 +72,7 @@ async def upload_audio(file: UploadFile = File(...)):
             model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
         )
 
-        # Transcribe audio
+        logger.info("Starting transcription")
         result = pipe(
             temp_file_path,
             chunk_length_s=30,
@@ -71,6 +80,7 @@ async def upload_audio(file: UploadFile = File(...)):
             return_timestamps=True,
             language='en',  # Always translate to English
         )
+        logger.info("Transcription completed")
         
         # Prepare response
         response = TranscriptionResponse(
@@ -82,13 +92,16 @@ async def upload_audio(file: UploadFile = File(...)):
             } for segment in result["chunks"]]
         )
         
+        logger.info("Returning response")
         return response
     except Exception as e:
+        logger.error(f"Transcription failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
     finally:
         # Clean up temporary file
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
+            logger.info(f"Temporary file removed: {temp_file_path}")
 
 @app.websocket("/api/v1/transcribe-stream")
 async def transcribe_stream(websocket: WebSocket):
