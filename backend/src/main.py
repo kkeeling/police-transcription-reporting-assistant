@@ -69,6 +69,7 @@ async def upload_audio(file: UploadFile = File(...)):
             chunk_length_s=30,
             batch_size=24,
             return_timestamps=True,
+            language='en',  # Always translate to English
         )
         
         # Prepare response
@@ -117,6 +118,7 @@ async def transcribe_stream(websocket: WebSocket):
                     chunk_length_s=30,
                     batch_size=24,
                     return_timestamps=True,
+                    language='en',  # Always translate to English
                 )
                 
                 # Prepare and send response
