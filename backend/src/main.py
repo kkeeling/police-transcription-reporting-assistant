@@ -1,11 +1,15 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import os
 import openai_whisper as whisper
+import asyncio
 
 app = FastAPI()
+
+# Load Whisper model globally
+model = whisper.load_model("base")
 
 # Configure CORS
 app.add_middleware(
@@ -72,3 +76,41 @@ async def upload_audio(file: UploadFile = File(...)):
         # Clean up temporary file
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
+
+@app.websocket("/api/v1/transcribe-stream")
+async def transcribe_stream(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            audio_data = await websocket.receive_bytes()
+            
+            # Save the audio data to a temporary file
+            temp_file_path = "temp_audio.wav"
+            with open(temp_file_path, "wb") as temp_file:
+                temp_file.write(audio_data)
+            
+            try:
+                # Transcribe audio
+                result = model.transcribe(temp_file_path)
+                
+                # Prepare and send response
+                response = TranscriptionResponse(
+                    text=result["text"],
+                    segments=[{
+                        "start": segment["start"],
+                        "end": segment["end"],
+                        "text": segment["text"]
+                    } for segment in result["segments"]]
+                )
+                await websocket.send_json(response.dict())
+            finally:
+                # Clean up temporary file
+                if os.path.exists(temp_file_path):
+                    os.remove(temp_file_path)
+            
+            # Small delay to prevent overwhelming the server
+            await asyncio.sleep(0.1)
+    except Exception as e:
+        await websocket.send_json({"error": str(e)})
+    finally:
+        await websocket.close()

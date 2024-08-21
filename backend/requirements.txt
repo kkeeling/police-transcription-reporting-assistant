@@ -1,3 +1,7 @@
-# This file is kept for reference, but dependencies are now managed in environment.yml
-# If you're not using Conda, you can install dependencies from this file using:
-# pip install -r requirements.txt
+# Dependencies for the Police Transcription & Report Generation API
+fastapi==0.68.0
+uvicorn==0.15.0
+pydantic==1.8.2
+python-multipart==0.0.5
+openai-whisper==20230314
+websockets==10.3
