@@ -78,6 +78,8 @@ async def upload_audio(file: UploadFile = File(...)):
             chunk_length_s=30,
             batch_size=24,
             return_timestamps=True,
+            language="en",  # Explicitly set language to English
+            task="transcribe"  # Ensure we're transcribing, not translating
         )
         logger.info("Transcription completed")
         
