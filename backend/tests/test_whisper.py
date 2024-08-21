@@ -14,7 +14,7 @@ class TestInsanelyFastWhisper(unittest.TestCase):
     def test_whisper_transcription(self):
         # Use a real audio file for testing
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        test_audio_path = os.path.join(current_dir, "test_audio.wav")
+        test_audio_path = os.path.join(current_dir, "test_audio.mp3")
         
         self.assertTrue(os.path.exists(test_audio_path), f"Test audio file not found: {test_audio_path}")
         
