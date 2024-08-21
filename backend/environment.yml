@@ -9,6 +9,7 @@ dependencies:
   - uvicorn=0.23.2
   - python-multipart=0.0.6
   - pydantic=2.4.2
+  - websockets=11.0.3
   - pip
   - transformers>=4.36
   - pytorch::pytorch>=2.1.1
