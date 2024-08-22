@@ -41,8 +41,12 @@ def initialize_groq_client():
         logger.info("GroqClient initialized successfully")
     except ValueError as e:
         logger.error(f"Error initializing GroqClient: {str(e)}")
+        print("ERROR: GROQ_API_KEY environment variable is not set. Please set it and restart the application.")
 
 initialize_groq_client()
+
+if not groq_client:
+    print("WARNING: The application is running without a valid GROQ_API_KEY. Some features may not work correctly.")
 
 @app.get("/")
 async def read_root():
