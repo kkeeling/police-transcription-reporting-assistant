@@ -88,9 +88,6 @@ async def upload_audio(file: UploadFile = File(...)):
             transcription = groq_client.transcribe_audio(audio_file, language="en")
         logger.info("Transcription completed")
         
-        if transcription is None:
-            raise HTTPException(status_code=500, detail="Transcription failed")
-        
         # Prepare response
         response = TranscriptionResponse(
             text=transcription,

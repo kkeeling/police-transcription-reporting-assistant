@@ -12,12 +12,9 @@ class GroqClient:
 
     def transcribe_audio(self, audio_file, language=None):
         try:
-            # Read the audio file content
-            audio_content = audio_file.read()
-            
             # Create a transcription request
             transcription = self.client.audio.transcriptions.create(
-                file=(audio_file.filename, audio_content),
+                file=audio_file,
                 model="whisper-large-v3",
                 prompt="Transcribe the following audio for a police report",
                 response_format="json",
@@ -29,4 +26,4 @@ class GroqClient:
             return transcription.text
         except Exception as e:
             print(f"Error during transcription: {str(e)}")
-            return None
+            raise  # Re-raise the exception to be handled by the caller
