@@ -191,6 +191,17 @@ async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(g
                 except asyncio.TimeoutError:
                     # No data received for 5 seconds, send a keep-alive message
                     await websocket.send_json({"status": "keep-alive"})
+                except HTTPException as http_exc:
+                    if http_exc.status_code == 429:
+                        retry_after = http_exc.headers.get("Retry-After", "60")
+                        logger.warning(f"Rate limit exceeded. Retry after: {retry_after} seconds")
+                        await websocket.send_json({
+                            "status": "error",
+                            "detail": "Rate limit exceeded",
+                            "retry_after": retry_after
+                        })
+                    else:
+                        raise
 
     except WebSocketDisconnect:
         logger.info("WebSocket disconnected")
