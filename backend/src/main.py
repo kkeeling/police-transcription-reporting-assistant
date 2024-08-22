@@ -1,18 +1,24 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.openapi.utils import get_openapi
-from pydantic import BaseModel
+from fastapi.responses import JSONResponse
+from fastapi.security import APIKeyHeader
+from pydantic import BaseModel, ValidationError
 from typing import List
 import os
 import asyncio
 import tempfile
 from dotenv import load_dotenv
 from .groq_client import GroqClient
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 # Load environment variables
 load_dotenv()
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(
     title="Police Transcription & Report Generation API",
     description="API for transcribing audio and generating police reports",
@@ -21,15 +27,36 @@ app = FastAPI(
     redoc_url=None,
     openapi_url=None
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:3000")],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
+# Security headers middleware
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
+
+# API key security
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+async def get_api_key(api_key_header: str = Depends(api_key_header)):
+    if api_key_header == os.getenv("API_KEY"):
+        return api_key_header
+    raise HTTPException(status_code=403, detail="Could not validate API key")
 
 class TranscriptionResponse(BaseModel):
     text: str
@@ -68,11 +95,13 @@ def get_groq_client():
     return groq_client
 
 @app.get("/")
-async def read_root():
+@limiter.limit("10/minute")
+async def read_root(request: Request):
     return {"message": "Welcome to the Police Transcription & Report Generation API"}
 
 @app.get("/health")
-async def health_check():
+@limiter.limit("10/minute")
+async def health_check(request: Request):
     return {
         "status": "healthy" if groq_client else "unhealthy",
         "details": "GroqClient not initialized" if not groq_client else None,
@@ -81,7 +110,8 @@ async def health_check():
     }
 
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
-async def upload_audio(file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client)):
+@limiter.limit("5/minute")
+async def upload_audio(request: Request, file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client), api_key: str = Depends(get_api_key)):
     logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
         logger.warning(f"Invalid file format: {file.filename}")
@@ -124,6 +154,9 @@ async def upload_audio(file: UploadFile = File(...), groq_client: GroqClient = D
 
 @app.websocket("/api/v1/stream-audio")
 async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(get_groq_client)):
+    if not await validate_websocket_api_key(websocket):
+        await websocket.close(code=4003)
+        return
     await websocket.accept()
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
@@ -203,3 +236,12 @@ async def get_documentation():
 @app.get("/redoc", include_in_schema=False)
 async def get_redoc_documentation():
     return get_redoc_html(openapi_url="/openapi.json", title="API Documentation")
+
+async def validate_websocket_api_key(websocket: WebSocket) -> bool:
+    try:
+        api_key = websocket.headers.get(API_KEY_NAME)
+        if api_key == os.getenv("API_KEY"):
+            return True
+        return False
+    except Exception:
+        return False
