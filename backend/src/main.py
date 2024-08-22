@@ -4,13 +4,9 @@ from pydantic import BaseModel
 from typing import List
 import os
 import asyncio
-import torch
-from transformers import pipeline
-from transformers.utils import is_flash_attn_2_available
+from groq_client import GroqClient
 
 app = FastAPI()
-
-# We'll initialize the model in the transcription function
 
 # Configure CORS
 app.add_middleware(
@@ -25,11 +21,13 @@ class TranscriptionResponse(BaseModel):
     text: str
     segments: List[dict]
 
-ALLOWED_EXTENSIONS = {'mp3', 'wav'}
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
+ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg', 'flac', 'm4a', 'mp4', 'mpeg', 'mpga', 'webm'}
+MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+groq_client = GroqClient()
 
 @app.get("/")
 async def read_root():
@@ -49,12 +47,12 @@ async def upload_audio(file: UploadFile = File(...)):
     logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
         logger.warning(f"Invalid file format: {file.filename}")
-        raise HTTPException(status_code=400, detail="Invalid file format. Only MP3 and WAV files are allowed.")
+        raise HTTPException(status_code=400, detail="Invalid file format. Only supported audio files are allowed.")
     
     content = await file.read()
     if len(content) > MAX_FILE_SIZE:
         logger.warning(f"File size exceeds limit: {len(content)} bytes")
-        raise HTTPException(status_code=400, detail="File size exceeds the maximum limit of 10 MB.")
+        raise HTTPException(status_code=400, detail="File size exceeds the maximum limit of 25 MB.")
     
     # Save the file temporarily
     temp_file_path = f"temp_{file.filename}"
@@ -63,32 +61,18 @@ async def upload_audio(file: UploadFile = File(...)):
     logger.info(f"Temporary file saved: {temp_file_path}")
     
     try:
-        logger.info("Initializing pipeline")
-        pipe = pipeline(
-            "automatic-speech-recognition",
-            model="openai/whisper-base",
-            torch_dtype=torch.float16,
-            device="cuda:0" if torch.cuda.is_available() else "cpu",
-            model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
-        )
-
         logger.info("Starting transcription")
-        result = pipe(
-            temp_file_path,
-            chunk_length_s=30,
-            batch_size=24,
-            return_timestamps=True
-        )
+        with open(temp_file_path, "rb") as audio_file:
+            transcription = groq_client.transcribe_audio(audio_file)
         logger.info("Transcription completed")
+        
+        if transcription is None:
+            raise HTTPException(status_code=500, detail="Transcription failed")
         
         # Prepare response
         response = TranscriptionResponse(
-            text=result["text"],
-            segments=[{
-                "start": segment["timestamp"][0],
-                "end": segment["timestamp"][1],
-                "text": segment["text"]
-            } for segment in result["chunks"]]
+            text=transcription,
+            segments=[]  # Groq API doesn't provide segments, so we're leaving this empty
         )
         
         logger.info("Returning response")
@@ -106,15 +90,6 @@ async def upload_audio(file: UploadFile = File(...)):
 async def transcribe_stream(websocket: WebSocket):
     await websocket.accept()
     try:
-        # Initialize the pipeline
-        pipe = pipeline(
-            "automatic-speech-recognition",
-            model="openai/whisper-tiny",
-            torch_dtype=torch.float16,
-            device="cuda:0" if torch.cuda.is_available() else "cpu",
-            model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
-        )
-
         while True:
             audio_data = await websocket.receive_bytes()
             
@@ -125,21 +100,16 @@ async def transcribe_stream(websocket: WebSocket):
             
             try:
                 # Transcribe audio
-                result = pipe(
-                    temp_file_path,
-                    chunk_length_s=30,
-                    batch_size=24,
-                    return_timestamps=True,
-                )
+                with open(temp_file_path, "rb") as audio_file:
+                    transcription = groq_client.transcribe_audio(audio_file)
+                
+                if transcription is None:
+                    raise Exception("Transcription failed")
                 
                 # Prepare and send response
                 response = TranscriptionResponse(
-                    text=result["text"],
-                    segments=[{
-                        "start": segment["timestamp"][0],
-                        "end": segment["timestamp"][1],
-                        "text": segment["text"]
-                    } for segment in result["chunks"]]
+                    text=transcription,
+                    segments=[]  # Groq API doesn't provide segments, so we're leaving this empty
                 )
                 await websocket.send_json(response.dict())
             finally:
