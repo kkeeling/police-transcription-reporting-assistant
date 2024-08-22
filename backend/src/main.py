@@ -41,7 +41,7 @@ def initialize_groq_client():
         logger.info("GroqClient initialized successfully")
     except ValueError as e:
         logger.error(f"Error initializing GroqClient: {str(e)}")
-        print("ERROR: GROQ_API_KEY environment variable is not set. Please set it and restart the application.")
+        print("ERROR: GROQ_API_KEY environment variable is not set. Please set it in the backend/.env file and restart the application.")
 
 initialize_groq_client()
 
