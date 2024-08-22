@@ -1,9 +1,11 @@
 import os
+from dotenv import load_dotenv
 from groq import Groq
 
 class GroqClient:
     def __init__(self):
-        api_key = os.environ.get("GROQ_API_KEY")
+        load_dotenv()  # Load environment variables from .env file
+        api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise ValueError("GROQ_API_KEY environment variable is not set. Please check your backend/.env file.")
         self.client = Groq(api_key=api_key)

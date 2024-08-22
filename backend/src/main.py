@@ -4,7 +4,11 @@ from pydantic import BaseModel
 from typing import List
 import os
 import asyncio
+from dotenv import load_dotenv
 from .groq_client import GroqClient
+
+# Load environment variables
+load_dotenv()
 
 app = FastAPI()
 
