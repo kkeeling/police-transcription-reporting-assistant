@@ -12,13 +12,28 @@ class GroqClient:
 
     def transcribe_audio(self, audio_file, language=None):
         try:
-            transcription = self.client.audio.transcriptions.create(
-                file=audio_file,
-                model="whisper-large-v3",
-                language=language,
-                response_format="text"
+            # Read the audio file content
+            audio_content = audio_file.read()
+            
+            # Create a chat completion request with the audio content
+            chat_completion = self.client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an AI assistant that transcribes audio. The user will provide audio content, and you should return the transcription."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"Please transcribe the following audio content: {audio_content}"
+                    }
+                ],
+                model="mixtral-8x7b-32768",
+                max_tokens=1024,
             )
-            return transcription.text
+            
+            # Extract the transcription from the response
+            transcription = chat_completion.choices[0].message.content
+            return transcription
         except Exception as e:
             print(f"Error during transcription: {str(e)}")
             return None

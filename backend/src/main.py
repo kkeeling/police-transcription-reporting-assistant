@@ -97,6 +97,7 @@ async def upload_audio(file: UploadFile = File(...)):
             segments=[]  # Groq API doesn't provide segments, so we're leaving this empty
         )
         
+        logger.info(f"Transcription result: {transcription}")
         logger.info("Returning response")
         return response
     except Exception as e:
