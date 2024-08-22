@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Stories: Sprint 3 - Backend Setup and Initial Integration</title>
+    <title>User Stories: Sprint 3 - Backend Setup and Groq API Integration</title>
 </head>
 <body>
-    <h1>User Stories: Sprint 3 - Backend Setup and Initial Integration</h1>
+    <h1>User Stories: Sprint 3 - Backend Setup and Groq API Integration</h1>
 
     <h2>US-3.1: Set up FastAPI Backend Environment</h2>
     <p><strong>As a</strong> developer,<br>
@@ -21,47 +21,45 @@
         <li>Requirements are documented in a requirements.txt file</li>
     </ul>
 
-    <h2>US-3.2: Configure Backend Dependencies</h2>
+    <h2>US-3.2: Implement Groq API Integration</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> configure all necessary backend dependencies,<br>
-    <strong>So that</strong> we can implement transcription and report generation features.</p>
+    <strong>I want to</strong> integrate the Groq API for audio transcription,<br>
+    <strong>So that</strong> we can accurately transcribe audio files and streams using their high-performance Whisper model.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Insanely Fast Whisper is installed and configured in the backend environment</li>
-        <li>Ollama is set up and ready for use with the backend</li>
-        <li>Any additional libraries required for audio processing are installed</li>
-        <li>All dependencies are documented in the requirements.txt file</li>
-        <li>Basic test scripts are created to verify the functionality of each major dependency</li>
+        <li>Groq API client is installed and configured in the backend environment</li>
+        <li>API key is securely stored and managed (e.g., using environment variables)</li>
+        <li>A wrapper function is created to handle Groq API calls for transcription</li>
+        <li>The integration supports both audio file transcription and streaming audio transcription</li>
+        <li>Error handling is implemented for API call failures</li>
     </ul>
 
     <h2>US-3.3: Implement API Endpoint for Audio File Upload and Transcription</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> create an API endpoint for uploading audio files for transcription,<br>
+    <strong>I want to</strong> create an API endpoint for uploading audio files for transcription using Groq,<br>
     <strong>So that</strong> users can transcribe pre-recorded audio files.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
         <li>An endpoint for receiving audio file uploads is created</li>
-        <li>The endpoint can handle common audio file formats (e.g., MP3, WAV)</li>
+        <li>The endpoint can handle common audio file formats supported by Groq (e.g., flac, mp3, mp4, wav)</li>
         <li>Uploaded files are properly validated for format and size</li>
-        <li>The endpoint triggers the transcription process using Insanely Fast Whisper</li>
+        <li>The endpoint triggers the transcription process using the Groq API</li>
         <li>Transcription results are returned in a structured format</li>
         <li>Proper error handling is implemented for file upload and transcription processes</li>
-        <li>The endpoint is tested with various audio files to ensure correct functionality</li>
     </ul>
 
     <h2>US-3.4: Implement WebSocket Endpoint for Streaming Audio Transcription</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> create a WebSocket endpoint for streaming audio transcription,<br>
+    <strong>I want to</strong> create a WebSocket endpoint for streaming audio transcription using Groq,<br>
     <strong>So that</strong> users can get real-time transcription of their speech.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
         <li>A WebSocket endpoint is created for receiving streaming audio data</li>
-        <li>The endpoint can handle real-time audio streams in a suitable format (e.g., PCM)</li>
-        <li>Incoming audio stream is properly processed and fed into Insanely Fast Whisper</li>
+        <li>The endpoint can handle real-time audio streams in a format supported by Groq</li>
+        <li>Incoming audio stream is properly processed and sent to Groq API for transcription</li>
         <li>Transcription results are sent back to the client in real-time</li>
         <li>The WebSocket connection handles interruptions and reconnections gracefully</li>
         <li>Proper error handling is implemented for streaming and transcription processes</li>
-        <li>The endpoint is tested with various audio inputs to ensure real-time transcription accuracy</li>
     </ul>
 
     <h2>US-3.5: Implement Health Check and API Documentation</h2>
@@ -87,34 +85,23 @@
         <li>Basic rate limiting is implemented to prevent abuse</li>
         <li>Input validation is added to all API endpoints</li>
         <li>Security headers are properly set (e.g., X-XSS-Protection, X-Content-Type-Options)</li>
+        <li>Groq API key is securely stored and not exposed to the client</li>
     </ul>
 
     <h2>US-3.7: Create Initial Frontend-Backend Integration</h2>
     <p><strong>As a</strong> developer,<br>
     <strong>I want to</strong> create an initial integration between the frontend and backend,<br>
-    <strong>So that</strong> we can verify end-to-end communication for audio transcription.</p>
+    <strong>So that</strong> we can verify end-to-end communication for audio transcription using Groq.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Frontend is updated to send audio data to the backend endpoint</li>
-        <li>WebSocket connection is established from frontend for real-time audio streaming</li>
+        <li>Frontend is updated to send audio data to the backend endpoint for Groq transcription</li>
+        <li>WebSocket connection is established from frontend for real-time audio streaming and transcription</li>
+        <li>Transcription results from Groq are displayed in the frontend UI</li>
         <li>Error handling for failed API calls and WebSocket errors is implemented in the frontend</li>
         <li>Loading states are properly managed in the frontend during transcription</li>
     </ul>
 
-    <h2>US-3.8: Implement Audio Transcription Logic</h2>
-    <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> implement the audio transcription feature,<br>
-    <strong>So that</strong> we can convert spoken words into text for report generation.</p>
-    <h3>Acceptance Criteria:</h3>
-    <ul>
-        <li>Insanely Fast Whisper is integrated to transcribe incoming audio data</li>
-        <li>Real-time transcription is implemented for streaming audio via WebSocket</li>
-        <li>Transcription results are sent back to the frontend in real-time</li>
-        <li>Error handling for transcription failures is implemented</li>
-        <li>Performance metrics for transcription (e.g., time taken, accuracy) are logged</li>
-    </ul>
-
-    <h2>US-3.9: Begin Creating System and User Prompts for LLMs</h2>
+    <h2>US-3.8: Begin Creating System and User Prompts for LLMs</h2>
     <p><strong>As a</strong> developer,<br>
     <strong>I want to</strong> start creating system and user prompts for our LLMs,<br>
     <strong>So that</strong> we can prepare for implementing the report generation feature.</p>

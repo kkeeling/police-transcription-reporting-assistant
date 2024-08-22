@@ -40,21 +40,22 @@
         <li>Enhance UI responsiveness and styling</li>
     </ul>
 
-    <h3>Sprint 3: Backend Setup and Initial Integration</h3>
+    <h3>Sprint 3: Backend Setup and Groq API Integration</h3>
     <ul>
         <li>Set up FastAPI backend environment</li>
-        <li>Configure necessary dependencies (e.g., Insanely Fast Whisper, Ollama)</li>
         <li>Implement basic API endpoints for health checks and testing</li>
         <li>Set up WebSocket server for real-time communication</li>
+        <li>Integrate Groq API for audio transcription</li>
+        <li>Implement API endpoint for audio file upload and transcription using Groq</li>
+        <li>Develop WebSocket endpoint for streaming audio transcription with Groq</li>
         <li>Implement CORS and necessary security measures</li>
-        <li>Create initial integration between frontend and backend</li>
-        <li>Implement backend audio transcription using Insanely Fast Whisper</li>
-        <li>Integrate frontend with transcription API</li>
+        <li>Create initial integration between frontend and backend for transcription</li>
         <li>Begin creating system and user prompts for LLMs</li>
     </ul>
 
     <h3>Sprint 4: Report Generation and Advanced Features</h3>
     <ul>
+        <li>Integrate Ollama for local LLM management</li>
         <li>Finalize system and user prompts for LLMs</li>
         <li>Implement report generation backend using Mixture-of-Agents with Ollama</li>
         <li>Integrate frontend with report generation API</li>
@@ -67,7 +68,8 @@
     <h3>Sprint 5: Testing, Optimization, and Deployment Preparation</h3>
     <ul>
         <li>Conduct thorough testing of all features</li>
-        <li>Optimize performance of transcription and report generation</li>
+        <li>Optimize performance of Groq API integration for transcription</li>
+        <li>Optimize performance of report generation</li>
         <li>Implement comprehensive error handling and user feedback mechanisms</li>
         <li>Enhance the quality and accuracy of generated reports</li>
         <li>Improve real-time transcription display</li>
@@ -90,9 +92,10 @@
 
     <h2>Risk Management</h2>
     <ul>
-        <li>Monitor performance of real-time transcription and address any latency issues</li>
+        <li>Monitor performance and reliability of Groq API for transcription</li>
+        <li>Have a fallback plan in case of Groq API downtime or issues</li>
         <li>Regularly assess the accuracy of transcriptions and generated reports</li>
-        <li>Keep track of LLM and Insanely Fast Whisper updates for potential improvements</li>
+        <li>Keep track of LLM updates for potential improvements in report generation</li>
         <li>Ensure compliance with data protection regulations and police department policies</li>
         <li>Plan for scalability to handle potential increase in users or data volume</li>
     </ul>

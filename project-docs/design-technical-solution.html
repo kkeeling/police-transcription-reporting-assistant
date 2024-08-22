@@ -21,7 +21,7 @@
     <ul>
         <li>Frontend: React, Vite, shadcn/ui, Tailwind CSS</li>
         <li>Backend: Python, FastAPI, WebSockets</li>
-        <li>Transcription: Insanely Fast Whisper</li>
+        <li>Transcription: Groq API (Whisper model)</li>
         <li>Language Models: Ollama (for local LLM integration)</li>
         <li>Report Generation: Mixture-of-Agents (MoA) approach</li>
         <li>Containerization: Docker</li>
@@ -42,16 +42,18 @@
     <ul>
         <li>RESTful API endpoints for non-real-time operations</li>
         <li>WebSocket server for real-time communication</li>
-        <li>Integration with Insanely Fast Whisper for transcription</li>
+        <li>Integration with Groq API for transcription</li>
         <li>Integration with Ollama for local LLM management</li>
         <li>Implementation of Mixture-of-Agents for report generation</li>
     </ul>
 
-    <h3>3.3 Transcription Service (Insanely Fast Whisper)</h3>
+    <h3>3.3 Transcription Service (Groq API - Whisper)</h3>
     <ul>
-        <li>High-speed, accurate transcription of audio input</li>
-        <li>Support for real-time transcription of ongoing recordings</li>
-        <li>Handling of uploaded audio files</li>
+        <li>Integration with Groq's API for audio transcription</li>
+        <li>Support for both audio file upload and real-time audio streaming</li>
+        <li>Handling of various audio formats (flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, webm)</li>
+        <li>Utilization of Whisper-large-v3 model for high-accuracy transcription</li>
+        <li>Optional language specification for improved accuracy</li>
     </ul>
 
     <h3>3.4 Language Model Integration (Ollama)</h3>
@@ -72,7 +74,7 @@
     <ol>
         <li>User records audio or uploads an audio file through the frontend</li>
         <li>Audio data is sent to the backend server</li>
-        <li>Backend routes audio to Insanely Fast Whisper for transcription</li>
+        <li>Backend sends audio to Groq API for transcription using Whisper-large-v3</li>
         <li>Transcription results are sent back to the frontend in real-time via WebSocket</li>
         <li>User edits and finalizes the transcription</li>
         <li>Finalized transcription is sent to the report generation service</li>
@@ -87,6 +89,7 @@
         <li>Use of secure WebSocket connections (WSS)</li>
         <li>Server-side validation of all user inputs</li>
         <li>Secure handling of temporary audio files and transcriptions</li>
+        <li>Use of Groq API key securely stored and managed on the server side</li>
     </ul>
 
     <h2>6. Scalability and Performance</h2>
@@ -94,6 +97,7 @@
         <li>Use of asynchronous programming in the backend for improved performance</li>
         <li>Optimization of LLM inference for faster report generation</li>
         <li>Efficient WebSocket management for handling multiple concurrent users</li>
+        <li>Utilization of Groq's high-performance API for fast transcription</li>
     </ul>
 
     <h2>7. Deployment</h2>
