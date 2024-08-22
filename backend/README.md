@@ -7,7 +7,7 @@ This is the backend for the Police Transcription & Report Generation project. It
 ### Prerequisites
 
 - [Conda](https://docs.conda.io/en/latest/miniconda.html) (Miniconda or Anaconda)
-- [Ollama](https://ollama.com/download) (for running language models)
+- [Groq API Key](https://console.groq.com/) (for accessing Groq services)
 
 ### Setting up the development environment
 
@@ -27,24 +27,29 @@ This is the backend for the Police Transcription & Report Generation project. It
    conda activate police-transcription-backend
    ```
 
-4. Install Ollama:
-   - Visit https://ollama.com/download and follow the instructions for your operating system.
-   - After installation, run `ollama run llama3.1` to download and test the Llama 3.1 model.
+4. Set up environment variables:
+   - Copy the `.env.example` file to `.env`:
+     ```
+     cp .env.example .env
+     ```
+   - Open the `.env` file and replace `your_groq_api_key_here` with your actual Groq API key.
 
 ## Running the backend
 
 1. Ensure you're in the backend directory and the Conda environment is activated.
 
-2. Start the FastAPI server:
+2. Make sure your `.env` file is properly configured with your Groq API key.
+
+3. Start the FastAPI server:
    ```
    uvicorn src.main:app --reload
    ```
 
    The `--reload` flag enables hot reloading, which is useful during development.
 
-3. The API will be available at `http://127.0.0.1:8000`.
+4. The API will be available at `http://127.0.0.1:8000`.
 
-4. You can access the automatic API documentation at `http://127.0.0.1:8000/docs`.
+5. You can access the automatic API documentation at `http://127.0.0.1:8000/docs`.
 
 ## Development
 
@@ -63,37 +68,28 @@ python tests/test_whisper.py
 
 (Add information about deployment process once it's established)
 
-## Configuring Insanely Fast Whisper
+## Using the Groq API
 
-Insanely Fast Whisper is already included in the Conda environment. To use it in your code:
-
-```python
-from transformers import pipeline
-from optimum.bettertransformer import BetterTransformer
-
-pipe = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3", device="cuda")
-pipe.model = BetterTransformer.transform(pipe.model)
-
-# Use the pipeline for transcription
-result = pipe("audio.mp3")
-```
-
-## Configuring Ollama
-
-Ollama is installed separately. To use it in your Python code:
+The Groq API is used for audio transcription. The `GroqClient` class in `src/groq_client.py` handles the interaction with the Groq API. Here's a basic example of how it's used in the code:
 
 ```python
-import requests
+from src.groq_client import GroqClient
 
-def query_ollama(prompt, model="llama3.1"):
-    response = requests.post("http://localhost:11434/api/generate", json={
-        "model": model,
-        "prompt": prompt
-    })
-    return response.json()["response"]
+groq_client = GroqClient()
 
-# Example usage
-result = query_ollama("Summarize this transcript: ...")
+# Transcribe an audio file
+with open("audio_file.mp3", "rb") as audio_file:
+    transcription = groq_client.transcribe_audio(audio_file)
+
+print(transcription)
 ```
 
-Remember to start the Ollama service before using it in your code.
+Make sure your Groq API key is correctly set in the `.env` file for this to work.
+
+## Environment Variables
+
+The following environment variables are used in this project:
+
+- `GROQ_API_KEY`: Your Groq API key for accessing Groq services.
+
+These should be set in the `.env` file in the backend directory. Never commit the `.env` file with actual API keys to version control.
