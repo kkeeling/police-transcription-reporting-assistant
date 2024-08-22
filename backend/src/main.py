@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
@@ -52,6 +52,11 @@ initialize_groq_client()
 if not groq_client:
     print("WARNING: The application is running without a valid GROQ_API_KEY. Some features may not work correctly.")
 
+def get_groq_client():
+    if not groq_client:
+        raise HTTPException(status_code=500, detail="GroqClient is not initialized. Please check your GROQ_API_KEY.")
+    return groq_client
+
 @app.get("/")
 async def read_root():
     return {"message": "Welcome to the Police Transcription & Report Generation API"}
@@ -61,11 +66,7 @@ async def health_check():
     return {"status": "healthy" if groq_client else "unhealthy", "details": "GroqClient not initialized" if not groq_client else None}
 
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
-async def upload_audio(file: UploadFile = File(...)):
-    if not groq_client:
-        logger.error("GroqClient is not initialized")
-        raise HTTPException(status_code=500, detail="GroqClient is not initialized. Please check your GROQ_API_KEY.")
-
+async def upload_audio(file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client)):
     logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
         logger.warning(f"Invalid file format: {file.filename}")
