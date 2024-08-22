@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends, Request
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends, Request, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.openapi.utils import get_openapi
@@ -14,6 +14,7 @@ from .groq_client import GroqClient
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+import json
 
 # Load environment variables
 load_dotenv()
@@ -164,22 +165,29 @@ async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(g
             logger.info(f"Created temporary file: {temp_file_path}")
 
             while True:
-                audio_chunk = await websocket.receive_bytes()
-                if not audio_chunk:
-                    break
-                temp_file.write(audio_chunk)
-                temp_file.flush()
+                try:
+                    audio_chunk = await asyncio.wait_for(websocket.receive_bytes(), timeout=5.0)
+                    if not audio_chunk:
+                        break
+                    temp_file.write(audio_chunk)
+                    temp_file.flush()
 
-                # Transcribe the accumulated audio
-                with open(temp_file_path, "rb") as audio_file:
-                    transcription = groq_client.transcribe_audio(audio_file, language="en")
+                    # Transcribe the accumulated audio
+                    with open(temp_file_path, "rb") as audio_file:
+                        transcription = groq_client.transcribe_audio(audio_file, language="en")
 
-                # Send the transcription back to the client
-                await websocket.send_text(transcription)
+                    # Send the transcription back to the client
+                    await websocket.send_json({"status": "success", "transcription": transcription})
 
+                except asyncio.TimeoutError:
+                    # No data received for 5 seconds, send a keep-alive message
+                    await websocket.send_json({"status": "keep-alive"})
+
+    except WebSocketDisconnect:
+        logger.info("WebSocket disconnected")
     except Exception as e:
         logger.error(f"Error in WebSocket connection: {str(e)}", exc_info=True)
-        await websocket.send_text(f"Error: {str(e)}")
+        await websocket.send_json({"status": "error", "message": str(e)})
     finally:
         # Clean up temporary file
         if os.path.exists(temp_file_path):
