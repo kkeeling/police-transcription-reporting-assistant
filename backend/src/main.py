@@ -1,5 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 from pydantic import BaseModel
 from typing import List
 import os
@@ -11,7 +13,14 @@ from .groq_client import GroqClient
 # Load environment variables
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(
+    title="Police Transcription & Report Generation API",
+    description="API for transcribing audio and generating police reports",
+    version="1.0.0",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None
+)
 
 # Configure CORS
 app.add_middleware(
@@ -64,7 +73,12 @@ async def read_root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy" if groq_client else "unhealthy", "details": "GroqClient not initialized" if not groq_client else None}
+    return {
+        "status": "healthy" if groq_client else "unhealthy",
+        "details": "GroqClient not initialized" if not groq_client else None,
+        "api_version": "1.0.0",
+        "environment": os.getenv("ENVIRONMENT", "development")
+    }
 
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
 async def upload_audio(file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client)):
@@ -177,3 +191,15 @@ async def transcribe_stream(websocket: WebSocket):
         await websocket.send_json({"error": str(e)})
     finally:
         await websocket.close()
+
+@app.get("/openapi.json", include_in_schema=False)
+async def get_open_api_endpoint():
+    return get_openapi(title="Police Transcription & Report Generation API", version="1.0.0", routes=app.routes)
+
+@app.get("/docs", include_in_schema=False)
+async def get_documentation():
+    return get_swagger_ui_html(openapi_url="/openapi.json", title="API Documentation")
+
+@app.get("/redoc", include_in_schema=False)
+async def get_redoc_documentation():
+    return get_redoc_html(openapi_url="/openapi.json", title="API Documentation")
