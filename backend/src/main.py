@@ -27,11 +27,22 @@ MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-try:
-    groq_client = GroqClient()
-except ValueError as e:
-    print(f"Error initializing GroqClient: {str(e)}")
-    groq_client = None
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+groq_client = None
+
+def initialize_groq_client():
+    global groq_client
+    try:
+        groq_client = GroqClient()
+        logger.info("GroqClient initialized successfully")
+    except ValueError as e:
+        logger.error(f"Error initializing GroqClient: {str(e)}")
+
+initialize_groq_client()
 
 @app.get("/")
 async def read_root():
@@ -41,13 +52,12 @@ async def read_root():
 async def health_check():
     return {"status": "healthy" if groq_client else "unhealthy", "details": "GroqClient not initialized" if not groq_client else None}
 
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
 async def upload_audio(file: UploadFile = File(...)):
+    if not groq_client:
+        logger.error("GroqClient is not initialized")
+        raise HTTPException(status_code=500, detail="GroqClient is not initialized. Please check your GROQ_API_KEY.")
+
     logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
         logger.warning(f"Invalid file format: {file.filename}")
