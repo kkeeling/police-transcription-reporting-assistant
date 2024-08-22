@@ -107,6 +107,38 @@ async def upload_audio(file: UploadFile = File(...), groq_client: GroqClient = D
             os.remove(temp_file_path)
             logger.info(f"Temporary file removed: {temp_file_path}")
 
+@app.websocket("/api/v1/stream-audio")
+async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(get_groq_client)):
+    await websocket.accept()
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
+            temp_file_path = temp_file.name
+            logger.info(f"Created temporary file: {temp_file_path}")
+
+            while True:
+                audio_chunk = await websocket.receive_bytes()
+                if not audio_chunk:
+                    break
+                temp_file.write(audio_chunk)
+                temp_file.flush()
+
+                # Transcribe the accumulated audio
+                with open(temp_file_path, "rb") as audio_file:
+                    transcription = groq_client.transcribe_audio(audio_file, language="en")
+
+                # Send the transcription back to the client
+                await websocket.send_text(transcription)
+
+    except Exception as e:
+        logger.error(f"Error in WebSocket connection: {str(e)}", exc_info=True)
+        await websocket.send_text(f"Error: {str(e)}")
+    finally:
+        # Clean up temporary file
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+            logger.info(f"Temporary file removed: {temp_file_path}")
+        await websocket.close()
+
 @app.websocket("/api/v1/transcribe-stream")
 async def transcribe_stream(websocket: WebSocket):
     await websocket.accept()
