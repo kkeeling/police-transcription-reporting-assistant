@@ -11,11 +11,16 @@ const PoliceReportGenerator: React.FC = () => {
   const websocketRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const failedChunkRef = useRef<Blob | null>(null);
 
   useEffect(() => {
     return () => {
       if (websocketRef.current) {
         websocketRef.current.close();
+      }
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
       }
     };
   }, []);
@@ -37,8 +42,20 @@ const PoliceReportGenerator: React.FC = () => {
         const data = JSON.parse(event.data);
         if (data.status === 'success') {
           setTranscription(prev => prev + ' ' + data.transcription);
+          failedChunkRef.current = null; // Clear the failed chunk on success
         } else if (data.status === 'error') {
-          setError(data.message);
+          if (data.detail === 'Rate limit exceeded' && data.retry_after) {
+            const retryAfter = parseInt(data.retry_after, 10) * 1000; // Convert to milliseconds
+            retryTimeoutRef.current = setTimeout(() => {
+              if (websocketRef.current?.readyState === WebSocket.OPEN) {
+                const retryChunk = new Blob([failedChunkRef.current, ...chunksRef.current], { type: "audio/webm" });
+                websocketRef.current.send(retryChunk);
+                chunksRef.current = []; // Clear chunks after sending
+              }
+            }, retryAfter);
+          } else {
+            setError(data.message);
+          }
         }
       };
 
@@ -52,8 +69,10 @@ const PoliceReportGenerator: React.FC = () => {
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
           chunksRef.current.push(event.data);
-          if (websocketRef.current?.readyState === WebSocket.OPEN) {
-            websocketRef.current.send(event.data);
+          if (websocketRef.current?.readyState === WebSocket.OPEN && !failedChunkRef.current) {
+            const chunk = new Blob([event.data], { type: "audio/webm" });
+            websocketRef.current.send(chunk);
+            failedChunkRef.current = chunk; // Store the last sent chunk
           }
         }
       };
@@ -62,6 +81,7 @@ const PoliceReportGenerator: React.FC = () => {
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
         setAudioBlob(blob);
         chunksRef.current = [];
+        failedChunkRef.current = null;
       };
 
       mediaRecorderRef.current.start(250); // Send audio data every 250ms
@@ -78,6 +98,9 @@ const PoliceReportGenerator: React.FC = () => {
     }
     if (websocketRef.current) {
       websocketRef.current.close();
+    }
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
     }
     setIsRecording(false);
   };
