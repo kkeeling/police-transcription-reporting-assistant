@@ -66,7 +66,7 @@ async def upload_audio(file: UploadFile = File(...)):
         logger.info("Initializing pipeline")
         pipe = pipeline(
             "automatic-speech-recognition",
-            model="openai/whisper-large-v3",
+            model="openai/whisper-base",
             torch_dtype=torch.float16,
             device="cuda:0" if torch.cuda.is_available() else "cpu",
             model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
@@ -77,9 +77,7 @@ async def upload_audio(file: UploadFile = File(...)):
             temp_file_path,
             chunk_length_s=30,
             batch_size=24,
-            return_timestamps=True,
-            language="en",  # Explicitly set language to English
-            task="transcribe"  # Ensure we're transcribing, not translating
+            return_timestamps=True
         )
         logger.info("Transcription completed")
         
@@ -111,7 +109,7 @@ async def transcribe_stream(websocket: WebSocket):
         # Initialize the pipeline
         pipe = pipeline(
             "automatic-speech-recognition",
-            model="openai/whisper-large-v3",
+            model="openai/whisper-tiny",
             torch_dtype=torch.float16,
             device="cuda:0" if torch.cuda.is_available() else "cpu",
             model_kwargs={"attn_implementation": "flash_attention_2"} if is_flash_attn_2_available() else {"attn_implementation": "sdpa"},
