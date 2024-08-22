@@ -3,7 +3,10 @@ from groq import Groq
 
 class GroqClient:
     def __init__(self):
-        self.client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+        api_key = os.environ.get("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError("GROQ_API_KEY environment variable is not set")
+        self.client = Groq(api_key=api_key)
 
     def transcribe_audio(self, audio_file, language=None):
         try:

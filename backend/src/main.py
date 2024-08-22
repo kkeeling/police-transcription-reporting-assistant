@@ -27,7 +27,11 @@ MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-groq_client = GroqClient()
+try:
+    groq_client = GroqClient()
+except ValueError as e:
+    print(f"Error initializing GroqClient: {str(e)}")
+    groq_client = None
 
 @app.get("/")
 async def read_root():
@@ -35,7 +39,7 @@ async def read_root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    return {"status": "healthy" if groq_client else "unhealthy", "details": "GroqClient not initialized" if not groq_client else None}
 
 import logging
 
