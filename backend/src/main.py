@@ -144,6 +144,15 @@ async def upload_audio(request: Request, file: UploadFile = File(...), groq_clie
         logger.info(f"Transcription result: {transcription}")
         logger.info("Returning response")
         return response
+    except HTTPException as http_exc:
+        if http_exc.status_code == 429:
+            retry_after = http_exc.headers.get("Retry-After", "60")
+            logger.warning(f"Rate limit exceeded. Retry after: {retry_after} seconds")
+            return JSONResponse(
+                status_code=429,
+                content={"detail": "Rate limit exceeded", "retry_after": retry_after}
+            )
+        raise
     except Exception as e:
         logger.error(f"Transcription failed: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
