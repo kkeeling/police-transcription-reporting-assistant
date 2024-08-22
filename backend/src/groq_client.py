@@ -15,7 +15,7 @@ class GroqClient:
             # Create a transcription request
             transcription = self.client.audio.transcriptions.create(
                 file=audio_file,
-                model="whisper-large-v3",
+                model="distil-whisper-large-v3-en",
                 prompt="Transcribe the following audio for a police report",
                 response_format="json",
                 language=language or "en",
