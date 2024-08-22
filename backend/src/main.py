@@ -85,7 +85,7 @@ async def upload_audio(file: UploadFile = File(...)):
     try:
         logger.info("Starting transcription")
         with open(temp_file_path, "rb") as audio_file:
-            transcription = groq_client.transcribe_audio(audio_file)
+            transcription = groq_client.transcribe_audio(audio_file, language="en")
         logger.info("Transcription completed")
         
         if transcription is None:
