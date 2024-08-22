@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List
 import os
 import asyncio
+import tempfile
 from dotenv import load_dotenv
 from .groq_client import GroqClient
 
