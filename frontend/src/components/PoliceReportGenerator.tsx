@@ -48,7 +48,10 @@ const PoliceReportGenerator: React.FC = () => {
             const retryAfter = parseInt(data.retry_after, 10) * 1000; // Convert to milliseconds
             retryTimeoutRef.current = setTimeout(() => {
               if (websocketRef.current?.readyState === WebSocket.OPEN) {
-                const retryChunk = new Blob([failedChunkRef.current, ...chunksRef.current], { type: "audio/webm" });
+                const retryChunk = new Blob(
+                  failedChunkRef.current ? [failedChunkRef.current, ...chunksRef.current] : chunksRef.current,
+                  { type: "audio/webm" }
+                );
                 websocketRef.current.send(retryChunk);
                 chunksRef.current = []; // Clear chunks after sending
               }
