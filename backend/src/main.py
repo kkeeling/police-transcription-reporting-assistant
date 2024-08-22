@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from typing import List
 import os
 import asyncio
-from groq_client import GroqClient
+from .groq_client import GroqClient
 
 app = FastAPI()
 
