@@ -170,39 +170,45 @@ async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(g
     await websocket.accept()
     temp_file_path = None
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
-            temp_file_path = temp_file.name
-            logger.info(f"Created temporary file: {temp_file_path}")
+        while True:
+            try:
+                audio_chunk = await asyncio.wait_for(websocket.receive_bytes(), timeout=5.0)
+                if not audio_chunk:
+                    break
 
-            while True:
-                try:
-                    audio_chunk = await asyncio.wait_for(websocket.receive_bytes(), timeout=5.0)
-                    if not audio_chunk:
-                        break
+                # Create a new temporary file for each chunk
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
+                    temp_file_path = temp_file.name
+                    logger.info(f"Created temporary file: {temp_file_path}")
                     temp_file.write(audio_chunk)
                     temp_file.flush()
 
-                    # Transcribe the accumulated audio
-                    with open(temp_file_path, "rb") as audio_file:
-                        transcription = groq_client.transcribe_audio(audio_file, language="en")
+                # Transcribe the audio chunk
+                with open(temp_file_path, "rb") as audio_file:
+                    transcription = groq_client.transcribe_audio(audio_file, language="en")
 
-                    # Send the transcription back to the client
+                # Send the transcription back to the client
+                if transcription.strip():  # Only send non-empty transcriptions
                     await websocket.send_json({"status": "success", "transcription": transcription})
 
-                except asyncio.TimeoutError:
-                    # No data received for 5 seconds, send a keep-alive message
-                    await websocket.send_json({"status": "keep-alive"})
-                except HTTPException as http_exc:
-                    if http_exc.status_code == 429:
-                        retry_after = http_exc.headers.get("Retry-After", "60")
-                        logger.warning(f"Rate limit exceeded. Retry after: {retry_after} seconds")
-                        await websocket.send_json({
-                            "status": "error",
-                            "detail": "Rate limit exceeded",
-                            "retry_after": retry_after
-                        })
-                    else:
-                        raise
+                # Clean up temporary file
+                os.remove(temp_file_path)
+                logger.info(f"Temporary file removed: {temp_file_path}")
+
+            except asyncio.TimeoutError:
+                # No data received for 5 seconds, send a keep-alive message
+                await websocket.send_json({"status": "keep-alive"})
+            except HTTPException as http_exc:
+                if http_exc.status_code == 429:
+                    retry_after = http_exc.headers.get("Retry-After", "60")
+                    logger.warning(f"Rate limit exceeded. Retry after: {retry_after} seconds")
+                    await websocket.send_json({
+                        "status": "error",
+                        "detail": "Rate limit exceeded",
+                        "retry_after": retry_after
+                    })
+                else:
+                    raise
 
     except WebSocketDisconnect:
         logger.info("WebSocket disconnected")
@@ -210,7 +216,7 @@ async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(g
         logger.error(f"Error in WebSocket connection: {str(e)}", exc_info=True)
         await websocket.send_json({"status": "error", "message": str(e)})
     finally:
-        # Clean up temporary file
+        # Ensure any remaining temporary file is cleaned up
         if temp_file_path and os.path.exists(temp_file_path):
             os.remove(temp_file_path)
             logger.info(f"Temporary file removed: {temp_file_path}")
