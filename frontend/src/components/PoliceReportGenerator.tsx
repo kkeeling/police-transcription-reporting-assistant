@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
-import { transcribeAudio } from "../api/mockApiService";
+import { transcribeAudio, uploadAudio } from "../api/mockApiService";
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -126,11 +126,22 @@ const PoliceReportGenerator: React.FC = () => {
     }
   };
 
-  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setAudioBlob(file);
       setTranscription(""); // Clear any existing transcription
+      setIsLoading(true);
+      setError(null);
+      try {
+        const result = await uploadAudio(file);
+        setTranscription(result.text);
+      } catch (error) {
+        console.error("Upload error:", error);
+        setError("Failed to upload and transcribe audio. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
