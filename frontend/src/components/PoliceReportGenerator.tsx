@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
 import { transcribeAudio } from "../api/mockApiService";
 
@@ -13,6 +13,7 @@ const PoliceReportGenerator: React.FC = () => {
   const chunksRef = useRef<Blob[]>([]);
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const failedChunkRef = useRef<Blob | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     return () => {
@@ -125,11 +126,22 @@ const PoliceReportGenerator: React.FC = () => {
     }
   };
 
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAudioBlob(file);
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
+  };
+
   return (
     <div className="space-y-4 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">Police Report Generator</h2>
       <p className="mb-4 text-sm sm:text-base">
-        Record your report and let the AI handle the transcription and formatting.
+        Record your report or upload an audio file, and let the AI handle the transcription and formatting.
       </p>
       <div className="flex flex-col sm:flex-row flex-wrap gap-4">
         <Button
@@ -139,6 +151,20 @@ const PoliceReportGenerator: React.FC = () => {
         >
           {isLoading ? 'Preparing...' : isRecording ? 'Stop Recording' : 'Start Recording'}
         </Button>
+        <Button
+          onClick={triggerFileUpload}
+          disabled={isLoading}
+          className="bg-gray-600 hover:bg-gray-700 text-white w-full sm:w-auto"
+        >
+          Upload Audio File
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileUpload}
+          accept="audio/*"
+          className="hidden"
+        />
         <Button
           onClick={handleGenerateReport}
           disabled={!audioBlob || isLoading}
@@ -151,6 +177,11 @@ const PoliceReportGenerator: React.FC = () => {
         <div className="mt-4 flex items-center">
           <div className="w-4 h-4 bg-red-500 rounded-full mr-2 animate-pulse"></div>
           <span>Recording...</span>
+        </div>
+      )}
+      {audioBlob && !isRecording && (
+        <div className="mt-4">
+          <span>Audio file ready for transcription</span>
         </div>
       )}
       {error && (
