@@ -15,6 +15,8 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 import json
+import wave
+import io
 
 # Load environment variables
 load_dotenv()
@@ -176,11 +178,19 @@ async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(g
                 if not audio_chunk:
                     break
 
+                # Convert the audio chunk to WAV format
+                wav_data = io.BytesIO()
+                with wave.open(wav_data, 'wb') as wav_file:
+                    wav_file.setnchannels(1)  # Mono
+                    wav_file.setsampwidth(2)  # 16-bit
+                    wav_file.setframerate(16000)  # 16kHz
+                    wav_file.writeframes(audio_chunk)
+
                 # Create a new temporary file for each chunk
                 with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
                     temp_file_path = temp_file.name
                     logger.info(f"Created temporary file: {temp_file_path}")
-                    temp_file.write(audio_chunk)
+                    temp_file.write(wav_data.getvalue())
                     temp_file.flush()
 
                 # Transcribe the audio chunk
