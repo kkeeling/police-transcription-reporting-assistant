@@ -130,6 +130,7 @@ const PoliceReportGenerator: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       setAudioBlob(file);
+      setTranscription(""); // Clear any existing transcription
     }
   };
 
