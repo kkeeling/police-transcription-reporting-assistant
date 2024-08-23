@@ -69,12 +69,13 @@ const PoliceReportGenerator: React.FC = () => {
         setIsLoading(false);
       };
 
-      mediaRecorderRef.current.ondataavailable = (event) => {
+      mediaRecorderRef.current.ondataavailable = async (event) => {
         if (event.data.size > 0) {
           chunksRef.current.push(event.data);
           if (websocketRef.current?.readyState === WebSocket.OPEN && !failedChunkRef.current) {
             const chunk = new Blob([event.data], { type: "audio/webm" });
-            websocketRef.current.send(chunk);
+            const arrayBuffer = await chunk.arrayBuffer();
+            websocketRef.current.send(arrayBuffer);
             failedChunkRef.current = chunk; // Store the last sent chunk
           }
         }
@@ -87,7 +88,7 @@ const PoliceReportGenerator: React.FC = () => {
         failedChunkRef.current = null;
       };
 
-      mediaRecorderRef.current.start(250); // Send audio data every 250ms
+      mediaRecorderRef.current.start(1000); // Send audio data every 1000ms (1 second)
     } catch (err) {
       console.error('Error starting recording:', err);
       setError('Failed to start recording');
