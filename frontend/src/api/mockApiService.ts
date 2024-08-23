@@ -23,3 +23,25 @@ export const transcribeAudio = async (audioBlob: Blob): Promise<string> => {
     throw error;
   }
 };
+
+export const uploadAudio = async (audioFile: File): Promise<{ text: string }> => {
+  // Create a FormData object to send the file
+  const formData = new FormData();
+  formData.append('file', audioFile);
+
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Mock API response
+  return { text: "This is a mock transcription of the uploaded audio file." };
+
+  // Uncomment the following lines when you're ready to make actual API calls
+  // const response = await fetch('http://localhost:8000/api/v1/upload-audio', {
+  //   method: 'POST',
+  //   body: formData,
+  // });
+  // if (!response.ok) {
+  //   throw new Error('Failed to upload audio');
+  // }
+  // return response.json();
+};
