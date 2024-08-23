@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
-import { transcribeAudio, uploadAudio } from "../api/mockApiService";
+import { transcribeAudio } from "../api/mockApiService";
+import { uploadAudio } from "../api/apiService";
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
