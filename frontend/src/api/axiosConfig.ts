@@ -10,21 +10,21 @@ const axiosInstance = axios.create({
 });
 
 // Add an interceptor to include the API key in all requests
-axiosInstance.interceptors.request.use((config) => {
-  config.headers['X-API-Key'] = import.meta.env.VITE_API_KEY;
-  return config;
-});
+// axiosInstance.interceptors.request.use((config) => {
+//   config.headers['X-API-Key'] = import.meta.env.VITE_API_KEY;
+//   return config;
+// });
 
 // Request interceptor
-axiosInstance.interceptors.request.use(
-  (config) => {
-    // You can add authentication headers here if needed
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     // You can add authentication headers here if needed
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
