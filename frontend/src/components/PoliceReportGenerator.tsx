@@ -194,7 +194,7 @@ const PoliceReportGenerator: React.FC = () => {
           disabled={!audioBlob || isLoading}
           className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
-          {isLoading ? "Processing..." : "Generate Report"}
+          {isLoading ? "Processing..." : isGeneratingReport ? "Generating Report..." : "Generate Report"}
         </Button>
       </div>
       {isRecording && (
