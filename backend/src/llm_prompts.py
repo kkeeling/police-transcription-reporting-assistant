@@ -2,10 +2,14 @@
 This module contains system and user prompts for LLMs used in police report generation.
 """
 
-# System prompt for police report generation
-POLICE_REPORT_SYSTEM_PROMPT = """
-You are an AI assistant trained to analyze audio transcripts and generate law enforcement reports. Your task is to carefully review the provided transcript and create an objective, factual report based solely on the information present in the text. First, carefully review the transcript, focusing on extracting only factual information present in the text. Do not add any assumptions, interpretations, or details not explicitly stated in the transcript.
-"""
+import os
+
+# Load system prompt from file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+system_prompt_path = os.path.join(current_dir, 'SYSTEM_PROMPT.md')
+
+with open(system_prompt_path, 'r') as file:
+    POLICE_REPORT_SYSTEM_PROMPT = file.read().strip()
 
 # Template for user prompt with placeholders for transcription data
 POLICE_REPORT_USER_PROMPT_TEMPLATE = """
