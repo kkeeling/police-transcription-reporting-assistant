@@ -7,8 +7,7 @@ export const uploadAudio = async (audioFile: File): Promise<{ text: string }> =>
   try {
     const response = await axiosInstance.post('/api/v1/upload-audio', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
-        'X-API-Key': import.meta.env.VITE_API_KEY,
+        'Content-Type': 'multipart/form-data'
       },
     });
 
