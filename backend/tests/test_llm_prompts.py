@@ -1,8 +1,13 @@
 import unittest
 import os
-from src.llm_prompts import generate_user_prompt, POLICE_REPORT_SYSTEM_PROMPT
+import sys
 import subprocess
 import json
+
+# Add the parent directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.llm_prompts import generate_user_prompt, POLICE_REPORT_SYSTEM_PROMPT
 
 class TestLLMPrompts(unittest.TestCase):
     def setUp(self):
