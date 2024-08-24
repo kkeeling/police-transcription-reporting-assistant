@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
 import { transcribeAudio } from "../api/mockApiService";
 import { uploadAudio } from "../api/apiService";
+import { Spinner } from "./ui/spinner"; // Make sure to create this component if it doesn't exist
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -9,6 +10,7 @@ const PoliceReportGenerator: React.FC = () => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
   const websocketRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -133,6 +135,7 @@ const PoliceReportGenerator: React.FC = () => {
       setAudioBlob(file);
       setTranscription(""); // Clear any existing transcription
       setIsLoading(true);
+      setIsTranscribing(true);
       setError(null);
       try {
         const result = await uploadAudio(file);
@@ -142,6 +145,7 @@ const PoliceReportGenerator: React.FC = () => {
         setError("Failed to upload and transcribe audio. Please try again.");
       } finally {
         setIsLoading(false);
+        setIsTranscribing(false);
       }
     }
   };
@@ -202,9 +206,14 @@ const PoliceReportGenerator: React.FC = () => {
           {error}
         </div>
       )}
-      <div className="bg-gray-800 p-4 rounded-lg mt-6">
+      <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
         <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-white">Transcription</h3>
-        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto">
+        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto relative">
+          {isTranscribing && (
+            <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+              <Spinner className="w-8 h-8 text-blue-500" />
+            </div>
+          )}
           {transcription ? (
             <p className="text-gray-200 whitespace-pre-wrap">{transcription}</p>
           ) : (
