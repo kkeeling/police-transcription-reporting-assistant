@@ -1,19 +1,25 @@
 import unittest
+import os
 from src.llm_prompts import generate_user_prompt, POLICE_REPORT_SYSTEM_PROMPT
 import subprocess
 import json
 
 class TestLLMPrompts(unittest.TestCase):
+    def setUp(self):
+        # Load the test transcription from the file
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        test_transcription_path = os.path.join(current_dir, 'test_transcription.txt')
+        with open(test_transcription_path, 'r') as file:
+            self.test_transcription = file.read().strip()
+
     def test_generate_user_prompt(self):
-        transcription = "At approximately 10:30 PM, I observed a red vehicle speeding on Main Street."
-        prompt = generate_user_prompt(transcription)
-        self.assertIn(transcription, prompt)
+        prompt = generate_user_prompt(self.test_transcription)
+        self.assertIn(self.test_transcription, prompt)
         self.assertIn("Incident Details", prompt)
         self.assertIn("Reporting Officer Information", prompt)
 
     def test_prompt_with_ollama(self):
-        transcription = "At 9:45 PM on July 15, 2023, I responded to a noise complaint at 123 Oak Street."
-        user_prompt = generate_user_prompt(transcription)
+        user_prompt = generate_user_prompt(self.test_transcription)
         
         # Combine system and user prompts
         full_prompt = f"{POLICE_REPORT_SYSTEM_PROMPT}\n\n{user_prompt}"
