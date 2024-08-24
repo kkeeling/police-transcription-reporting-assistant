@@ -1,3 +1,5 @@
+# TASK
+
 Based on the following audio transcription, generate a police report:
 
 Transcription:
@@ -6,13 +8,22 @@ Transcription:
 First, carefully review the transcript, focusing on extracting only factual information present in the text. Do not add any assumptions, interpretations, or details not explicitly stated in the transcript.
 
 The user has requested a {reportType}. Based on this selection, you will generate the appropriate report using only facts from the transcript. Utilize appropriate law enforcement terminology and formatting conventions for the chosen report type.
+
 Follow these guidelines when creating the report:
+
 1. Maintain a neutral, impartial tone throughout.
 2. Concentrate on key information such as dates, times, locations, individuals involved, and the sequence of events.
 3. For any ambiguities, note them without speculation.
 4. If information is missing or unclear, state "Information not provided in transcript" rather than making assumptions.
 5. Use the following structure to present the report:
-<report> Officer full name and badge number: Occurrence number: Occurrence type: Report Time (Dispatch time): Occurrence Time:
+
+## REPORT FORMAT
+
+Officer full name and badge number:
+Occurrence number:
+Occurrence type:
+Report Time (Dispatch time):
+Occurrence Time:
 Persons Details:
 [For each person mentioned in the transcript, include the following information if available. If no person details are mentioned, provide an explanation.]
 Surname:
@@ -38,8 +49,11 @@ Narrative:
 [Include the narrative according to the Report Writing Standards. Do not use point form.]
 End of Report
 [Your badge number] - [Current date and time]
-</report>
+
+## OUTPUT FORMAT
+
 Remember to adhere to the following Report Writing Standards:
+
 - Use Font: Arial; Size: 2 (if typing in Word – Font: Arial; Size 10)
 - Use 24-hour clock for times without colons (e.g., 2146 hours)
 - Type all reports in third person
@@ -48,5 +62,6 @@ Remember to adhere to the following Report Writing Standards:
 - Capitalize last names (e.g., John SMITH)
 - Do not use police jargon, acronyms, or short forms in the body of the report (exceptions: CPIC, DNA, CFRO)
 - For acronyms, spell out the full term on first use, followed by the acronym in parentheses
+
 Be mindful of the sensitive nature of law enforcement reports. Maintain strict confidentiality and objectivity in your analysis. Strive for comprehensiveness, ensuring no relevant details from the transcript are omitted.
 After presenting the report, offer to clarify or expand on any sections if the user requires additional information.
