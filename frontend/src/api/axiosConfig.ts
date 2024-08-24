@@ -6,8 +6,13 @@ const axiosInstance = axios.create({
   baseURL,
   headers: {
     'Content-Type': 'application/json',
-    'X-API-Key': import.meta.env.VITE_API_KEY,
   },
+});
+
+// Add an interceptor to include the API key in all requests
+axiosInstance.interceptors.request.use((config) => {
+  config.headers['X-API-Key'] = import.meta.env.VITE_API_KEY;
+  return config;
 });
 
 // Request interceptor
