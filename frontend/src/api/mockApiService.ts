@@ -45,3 +45,22 @@ export const uploadAudio = async (audioFile: File): Promise<{ text: string }> =>
   // }
   // return response.json();
 };
+
+export const generateReport = async (transcription: string): Promise<string> => {
+  // Simulate API call delay
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  // Mock report generation
+  return `
+Police Report
+
+Date: ${new Date().toLocaleDateString()}
+Time: ${new Date().toLocaleTimeString()}
+
+Incident Description:
+${transcription}
+
+This report was generated automatically based on the provided audio transcription.
+Further investigation and verification may be required.
+  `.trim();
+};

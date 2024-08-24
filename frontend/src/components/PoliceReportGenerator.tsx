@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
-import { transcribeAudio } from "../api/mockApiService";
+import { transcribeAudio, generateReport } from "../api/mockApiService";
 import { uploadAudio } from "../api/apiService";
-import { Spinner } from "./ui/spinner"; // Make sure to create this component if it doesn't exist
+import { Spinner } from "./ui/spinner";
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcription, setTranscription] = useState("");
+  const [report, setReport] = useState("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false);
   const websocketRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -120,11 +122,15 @@ const PoliceReportGenerator: React.FC = () => {
       try {
         const result = await transcribeAudio(audioBlob);
         setTranscription(result);
+        setIsGeneratingReport(true);
+        const generatedReport = await generateReport(result);
+        setReport(generatedReport);
       } catch (error) {
-        console.error("Transcription error:", error);
-        setError("Failed to transcribe audio. Please try again.");
+        console.error("Transcription or report generation error:", error);
+        setError("Failed to generate report. Please try again.");
       } finally {
         setIsLoading(false);
+        setIsGeneratingReport(false);
       }
     }
   };
@@ -134,6 +140,7 @@ const PoliceReportGenerator: React.FC = () => {
     if (file) {
       setAudioBlob(file);
       setTranscription(""); // Clear any existing transcription
+      setReport(""); // Clear any existing report
       setIsLoading(true);
       setIsTranscribing(true);
       setError(null);
@@ -187,7 +194,7 @@ const PoliceReportGenerator: React.FC = () => {
           disabled={!audioBlob || isLoading}
           className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
-          {isLoading ? "Transcribing..." : "Generate Report"}
+          {isLoading ? "Processing..." : "Generate Report"}
         </Button>
       </div>
       {isRecording && (
@@ -198,7 +205,7 @@ const PoliceReportGenerator: React.FC = () => {
       )}
       {audioBlob && !isRecording && (
         <div className="mt-4">
-          <span>Audio file ready for transcription</span>
+          <span>Audio file ready for processing</span>
         </div>
       )}
       {error && (
@@ -219,6 +226,23 @@ const PoliceReportGenerator: React.FC = () => {
           ) : (
             <p className="text-gray-400 italic">
               Transcription will appear here...
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
+        <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-white">Generated Report</h3>
+        <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto relative">
+          {isGeneratingReport && (
+            <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+              <Spinner className="w-8 h-8 text-blue-500" />
+            </div>
+          )}
+          {report ? (
+            <p className="text-gray-200 whitespace-pre-wrap">{report}</p>
+          ) : (
+            <p className="text-gray-400 italic">
+              Generated report will appear here...
             </p>
           )}
         </div>
