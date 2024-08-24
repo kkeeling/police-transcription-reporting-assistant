@@ -3,7 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
-from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, ValidationError
 from typing import List
 import os
@@ -52,14 +51,6 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
-# API key security
-API_KEY_NAME = "X-API-Key"
-api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
-
-async def get_api_key(api_key_header: str = Depends(api_key_header)):
-    if api_key_header == os.getenv("API_KEY"):
-        return api_key_header
-    raise HTTPException(status_code=403, detail="Could not validate API key")
 
 class TranscriptionResponse(BaseModel):
     text: str
@@ -114,7 +105,7 @@ async def health_check(request: Request):
 
 @app.post("/api/v1/upload-audio", response_model=TranscriptionResponse)
 @limiter.limit("5/minute")
-async def upload_audio(request: Request, file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client), api_key: str = Depends(get_api_key)):
+async def upload_audio(request: Request, file: UploadFile = File(...), groq_client: GroqClient = Depends(get_groq_client)):
     logger.info(f"Received file: {file.filename}")
     if not allowed_file(file.filename):
         logger.warning(f"Invalid file format: {file.filename}")
@@ -166,9 +157,6 @@ async def upload_audio(request: Request, file: UploadFile = File(...), groq_clie
 
 @app.websocket("/api/v1/stream-audio")
 async def stream_audio(websocket: WebSocket, groq_client: GroqClient = Depends(get_groq_client)):
-    if not await validate_websocket_api_key(websocket):
-        await websocket.close(code=4003)
-        return
     await websocket.accept()
     temp_file_path = None
     try:
@@ -281,11 +269,3 @@ async def get_documentation():
 async def get_redoc_documentation():
     return get_redoc_html(openapi_url="/openapi.json", title="API Documentation")
 
-async def validate_websocket_api_key(websocket: WebSocket) -> bool:
-    try:
-        api_key = websocket.headers.get(API_KEY_NAME)
-        if api_key == os.getenv("API_KEY"):
-            return True
-        return False
-    except Exception:
-        return False
