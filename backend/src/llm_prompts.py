@@ -21,9 +21,16 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
 
     Args:
         transcription (str): The transcribed audio content.
-        report_type (str): The type of report to generate.
+        report_type (str): The type of report to generate. Must be either "General Occurrence" or "Crown Brief".
 
     Returns:
         str: The formatted user prompt with the transcription inserted.
+
+    Raises:
+        ValueError: If an invalid report_type is provided.
     """
+    valid_report_types = ["General Occurrence", "Crown Brief"]
+    if report_type not in valid_report_types:
+        raise ValueError(f"Invalid report_type. Must be one of: {', '.join(valid_report_types)}")
+    
     return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, report_type=report_type)
