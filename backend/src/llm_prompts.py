@@ -3,6 +3,7 @@ This module contains system and user prompts for LLMs used in police report gene
 """
 
 import os
+from .ollama_client import OllamaClient
 
 # Load system prompt from file
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -18,6 +19,7 @@ with open(user_prompt_path, 'r') as file:
 with open(example_report_path, 'r') as file:
     example_report = file.read().strip()
 
+ollama_client = OllamaClient()
 
 def generate_user_prompt(transcription: str, report_type: str) -> str:
     """
@@ -38,3 +40,20 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
         raise ValueError(f"Invalid report_type. Must be one of: {', '.join(valid_report_types)}")
     
     return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, reportType=report_type, example_report=example_report)
+
+def generate_report(transcription: str, report_type: str, model_name: str = "llama3") -> str:
+    """
+    Generate a police report using the Ollama LLM.
+
+    Args:
+        transcription (str): The transcribed audio content.
+        report_type (str): The type of report to generate.
+        model_name (str): The name of the Ollama model to use.
+
+    Returns:
+        str: The generated police report.
+    """
+    user_prompt = generate_user_prompt(transcription, report_type)
+    full_prompt = f"{POLICE_REPORT_SYSTEM_PROMPT}\n\n{user_prompt}"
+    
+    return ollama_client.run_ollama_model(model_name, full_prompt)

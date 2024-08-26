@@ -52,6 +52,8 @@ async def add_security_headers(request: Request, call_next):
     return response
 
 
+from .llm_prompts import generate_report
+
 class TranscriptionResponse(BaseModel):
     text: str
     segments: List[dict]
@@ -71,6 +73,13 @@ groq_client = None
 
 def initialize_groq_client():
     global groq_client
+    groq_client = GroqClient()
+
+def initialize_ollama_client():
+    global ollama_client
+    from .ollama_client import OllamaClient
+    ollama_client = OllamaClient()
+    global groq_client
     try:
         groq_client = GroqClient()
         logger.info("GroqClient initialized successfully")
@@ -79,6 +88,7 @@ def initialize_groq_client():
         print("ERROR: GROQ_API_KEY environment variable is not set. Please set it in the backend/.env file and restart the application.")
 
 initialize_groq_client()
+initialize_ollama_client()
 
 if not groq_client:
     print("WARNING: The application is running without a valid GROQ_API_KEY. Some features may not work correctly.")
