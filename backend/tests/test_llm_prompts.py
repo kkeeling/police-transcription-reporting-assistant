@@ -18,13 +18,13 @@ class TestLLMPrompts(unittest.TestCase):
             self.test_transcription = file.read().strip()
 
     def test_generate_user_prompt(self):
-        prompt = generate_user_prompt(self.test_transcription)
+        prompt = generate_user_prompt(self.test_transcription, "incident")
         self.assertIn(self.test_transcription, prompt)
         self.assertIn("Incident Details", prompt)
         self.assertIn("Reporting Officer Information", prompt)
 
     def test_prompt_with_ollama(self):
-        user_prompt = generate_user_prompt(self.test_transcription)
+        user_prompt = generate_user_prompt(self.test_transcription, "incident")
         
         # Combine system and user prompts
         full_prompt = f"{POLICE_REPORT_SYSTEM_PROMPT}\n\n{user_prompt}"

@@ -15,7 +15,7 @@ with open(system_prompt_path, 'r') as file:
 with open(user_prompt_path, 'r') as file:
     POLICE_REPORT_USER_PROMPT_TEMPLATE = file.read().strip()
 
-def generate_user_prompt(transcription: str, reportType: str) -> str:
+def generate_user_prompt(transcription: str, report_type: str) -> str:
     """
     Generate a user prompt for police report generation based on the given transcription.
 
