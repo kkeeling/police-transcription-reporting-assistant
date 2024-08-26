@@ -49,11 +49,14 @@ class TestLLMPrompts(unittest.TestCase):
             )
             response = result.stdout
             
-            # Basic checks on the response
+            # Basic checks on the response using data from test_transcription
             self.assertIn("Incident Details", response)
-            self.assertIn("July 15, 2023", response)
-            self.assertIn("123 Oak Street", response)
-            self.assertIn("noise complaint", response)
+            self.assertIn("August 10th, 2023", response)
+            self.assertIn("704 McLaughlin Street", response)
+            self.assertIn("weapons call", response)
+            self.assertIn("Matthew Atchipinescom", response)
+            self.assertIn("Constable Gerald Duffy", response)
+            self.assertIn("Badge 362", response)
             
         except subprocess.CalledProcessError as e:
             self.fail(f"Ollama command failed: {e}")
