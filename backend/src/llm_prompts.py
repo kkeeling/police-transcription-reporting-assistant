@@ -21,9 +21,9 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
 
     Args:
         transcription (str): The transcribed audio content.
-        reportType (str): The type of report to generate.
+        report_type (str): The type of report to generate.
 
     Returns:
         str: The formatted user prompt with the transcription inserted.
     """
-    return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, reportType=reportType)
+    return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, report_type=report_type)
