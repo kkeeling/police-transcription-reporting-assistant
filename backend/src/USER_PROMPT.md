@@ -2,12 +2,13 @@
 
 Based on the following audio transcription, generate a police report:
 
-Transcription:
+**Transcription:**
+
+```
 {transcription}
+```
 
-First, carefully review the transcript, focusing on extracting only factual information present in the text. Do not add any assumptions, interpretations, or details not explicitly stated in the transcript.
-
-The user has requested a {reportType}. Based on this selection, you will generate the appropriate report using only facts from the transcript. Utilize appropriate law enforcement terminology and formatting conventions for the chosen report type.
+The user has requested a **{reportType}**. Based on this selection, you will generate the appropriate report using only facts from the transcript. Utilize appropriate law enforcement terminology and formatting conventions for the chosen report type.
 
 Follow these guidelines when creating the report:
 
@@ -19,36 +20,49 @@ Follow these guidelines when creating the report:
 
 ## REPORT FORMAT
 
-Officer full name and badge number:
-Occurrence number:
-Occurrence type:
-Report Time (Dispatch time):
-Occurrence Time:
-Persons Details:
-[For each person mentioned in the transcript, include the following information if available. If no person details are mentioned, provide an explanation.]
-Surname:
-Given 1:
-Given 2:
-Sex type:
-Date of Birth:
-Persons Address:
-House or building number:
-Street Address:
-Apartment or room number:
-City, Town: (if not a Thunder Bay address)
-Type of Residence: (Business Checks Frequents Observed Residence Temporary Residence)
-Contact info:
-Phone number including area code:
-Phone # Type: (cell, home, work)
-Social Media Type: (facebook, snapchat, instagram, etc)
-Social Media Handle:
-Email address:
-Involvement type:
-[Examples - Arrested, Accused, Attending Physician, Complainant, Coroner, Cyclist, Deceased, Emergency Services, Escapee, Finder, Injured, Located, Mental Health, Missing, Observed, Owner, Paramedic, Pedestrian, Reporter, Street Checked, Suicidal, Suspect, Vehicle Driver, Vehicle Passenger, Victim, Wanted, Warned, Witness]
-Narrative:
+**Officer full name and badge number:**
+
+**Occurrence number:**
+
+**Occurrence type:**
+
+**Report Time (Dispatch time):**
+
+**Occurrence Time:**
+
+**Persons Details:**
+
+- **Surname:**
+- **Given 1:**
+- **Given 2:**
+- **Sex type:**
+- **Date of Birth:**
+- **Persons Address:**
+  - **House or building number:**
+  - **Street Address:**
+  - **Apartment or room number:**
+  - **City, Town:** (if not a Thunder Bay address)
+  - **Type of Residence:** (Business Checks, Frequents, Observed Residence, Temporary Residence)
+- **Contact info:**
+  - **Phone number including area code:**
+  - **Phone # Type:** (cell, home, work)
+  - **Social Media Type:** (Facebook, Snapchat, Instagram, etc.)
+  - **Social Media Handle:**
+  - **Email address:**
+- **Involvement type:** [Examples - Arrested, Accused, Attending Physician, Complainant, Coroner, Cyclist, Deceased, Emergency Services, Escapee, Finder, Injured, Located, Mental Health, Missing, Observed, Owner, Paramedic, Pedestrian, Reporter, Street Checked, Suicidal, Suspect, Vehicle Driver, Vehicle Passenger, Victim, Wanted, Warned, Witness]
+
+**Narrative:**
 [Include the narrative according to the Report Writing Standards. Do not use point form.]
-End of Report
-[Your badge number] - [Current date and time]
+
+**End of Report**
+
+**Badge Number:** [Your badge number] - **Date and Time:** [Current date and time]
+
+## REPORT EXAMPLE
+
+```
+{example_report}
+```
 
 ## OUTPUT FORMAT
 
