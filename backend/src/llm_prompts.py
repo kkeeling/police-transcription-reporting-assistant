@@ -8,12 +8,16 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 system_prompt_path = os.path.join(current_dir, 'SYSTEM_PROMPT.md')
 user_prompt_path = os.path.join(current_dir, 'USER_PROMPT.md')
-
+example_report_path = os.path.join(current_dir, 'example_report.md')
 with open(system_prompt_path, 'r') as file:
     POLICE_REPORT_SYSTEM_PROMPT = file.read().strip()
 
 with open(user_prompt_path, 'r') as file:
     POLICE_REPORT_USER_PROMPT_TEMPLATE = file.read().strip()
+
+with open(example_report_path, 'r') as file:
+    example_report = file.read().strip()
+
 
 def generate_user_prompt(transcription: str, report_type: str) -> str:
     """
@@ -33,4 +37,4 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
     if report_type not in valid_report_types:
         raise ValueError(f"Invalid report_type. Must be one of: {', '.join(valid_report_types)}")
     
-    return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, reportType=report_type)
+    return POLICE_REPORT_USER_PROMPT_TEMPLATE.format(transcription=transcription, reportType=report_type, example_report=example_report)
