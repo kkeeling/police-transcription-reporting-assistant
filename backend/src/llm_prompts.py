@@ -4,6 +4,8 @@ This module contains system and user prompts for LLMs used in police report gene
 
 import os
 import llm
+from chain import FusionChain
+from typing import List, Dict, Any
 
 # Load system prompt from file
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -44,26 +46,53 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
         example_report=EXAMPLE_REPORT
     )
 
-def generate_report(transcription: str, report_type: str, model_name: str = "llama2") -> str:
+def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
     """
-    Generate a police report using the specified LLM model.
+    Stub for the evaluator function.
+    This function will be implemented later to evaluate and score the outputs from different models.
+
+    Args:
+        outputs (List[str]): List of outputs from different models.
+
+    Returns:
+        tuple[str, List[float]]: A tuple containing the top response and a list of scores for each output.
+    """
+    # For now, we'll just return the first output as the top response and equal scores for all outputs
+    return outputs[0], [1.0] * len(outputs)
+
+def generate_report(transcription: str, report_type: str) -> str:
+    """
+    Generate a police report using FusionChain with multiple LLM models.
 
     Args:
         transcription (str): The transcribed audio content.
         report_type (str): The type of report to generate.
-        model_name (str): The name of the model to use.
 
     Returns:
         str: The generated police report.
     """
     user_prompt = generate_user_prompt(transcription, report_type)
     
-    try:
-        model = llm.get_model(model_name)
-        response = model.prompt(user_prompt, system=POLICE_REPORT_SYSTEM_PROMPT)
-        return response.text()
-    except llm.UnknownModelError:
-        raise ValueError(f"Unknown model: {model_name}")
+    # Create models
+    models = [
+        llm.get_model("gemma2"),
+        llm.get_model("llama3.1"),
+        llm.get_model("mistral")
+    ]
+
+    def prompt_model(model: Any, prompt: str) -> str:
+        return model.prompt(prompt, system=POLICE_REPORT_SYSTEM_PROMPT).text()
+
+    result = FusionChain.run(
+        context={"user_prompt": user_prompt},
+        models=models,
+        callable=prompt_model,
+        prompts=["{{user_prompt}}"],
+        evaluator=evaluator,
+        get_model_name=lambda model: model.model_id
+    )
+
+    return result.top_response
 
 def get_available_models() -> list:
     """
