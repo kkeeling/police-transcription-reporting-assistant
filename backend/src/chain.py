@@ -10,7 +10,7 @@ class FusionChainResult(BaseModel):
     all_prompt_responses: List[List[Any]]
     all_context_filled_prompts: List[List[str]]
     performance_scores: List[float]
-    model_identifiers: List[str]
+    llm_identifiers: List[str]
 
 
 class FusionChain:
@@ -65,7 +65,7 @@ class FusionChain:
             all_prompt_responses=all_outputs,
             all_context_filled_prompts=all_context_filled_prompts,
             performance_scores=performance_scores,
-            model_identifiers=model_names,
+            llm_identifiers=model_names,
         )
 
     @staticmethod
@@ -126,7 +126,7 @@ class FusionChain:
             all_prompt_responses=all_outputs,
             all_context_filled_prompts=all_context_filled_prompts,
             performance_scores=performance_scores,
-            model_identifiers=model_names,
+            llm_identifiers=model_names,
         )
 
 
