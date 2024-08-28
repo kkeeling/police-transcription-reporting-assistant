@@ -4,7 +4,7 @@ This module contains system and user prompts for LLMs used in police report gene
 
 import os
 import llm
-from chain import FusionChain
+from .chain import FusionChain
 from typing import List, Dict, Any
 
 # Load system prompt from file
@@ -84,10 +84,10 @@ def generate_report(transcription: str, report_type: str) -> str:
         return model.prompt(prompt, system=POLICE_REPORT_SYSTEM_PROMPT).text()
 
     result = FusionChain.run(
-        context={"user_prompt": user_prompt},
+        context={},
         models=models,
         callable=prompt_model,
-        prompts=["{{user_prompt}}"],
+        prompts=[user_prompt],
         evaluator=evaluator,
         get_model_name=lambda model: model.model_id
     )
