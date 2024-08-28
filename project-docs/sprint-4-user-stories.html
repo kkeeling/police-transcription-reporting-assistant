@@ -8,61 +8,78 @@
 <body>
     <h1>User Stories: Sprint 4 - Report Generation and Advanced Features</h1>
 
-    <h2>US-4.1: Integrate Ollama for Local LLM Management</h2>
+    <h2>US-4.1: Integrate Multiple LLM Models for Fusion Chain</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> integrate Ollama for local LLM management,<br>
-    <strong>So that</strong> we can use multiple LLM models for report generation.</p>
+    <strong>I want to</strong> integrate multiple LLM models for use in a Fusion Chain,<br>
+    <strong>So that</strong> we can generate high-quality police reports by leveraging the strengths of various models.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>Ollama is installed and configured in the backend environment</li>
-        <li>A wrapper class or module is created to interact with Ollama</li>
-        <li>The integration supports loading and switching between different LLM models</li>
-        <li>Basic error handling is implemented for Ollama interactions</li>
-        <li>A simple test suite is created to verify Ollama integration</li>
+        <li>At least three different LLM models are integrated and available for use</li>
+        <li>A configuration system is set up to easily add or remove models from the Fusion Chain</li>
+        <li>Each model can be called with the same interface for consistent interaction</li>
+        <li>Basic error handling is implemented for model interactions</li>
+        <li>A simple test suite is created to verify each model's integration</li>
     </ul>
 
-    <h2>US-4.2: Finalize System and User Prompts for LLMs</h2>
+    <h2>US-4.2: Implement Fusion Chain for Report Generation</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> finalize the system and user prompts for our LLMs,<br>
-    <strong>So that</strong> we can generate accurate and well-structured police reports.</p>
+    <strong>I want to</strong> implement a Fusion Chain for report generation,<br>
+    <strong>So that</strong> we can create high-quality police reports by combining outputs from multiple LLM models.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>System prompts are refined based on initial testing and feedback</li>
-        <li>User prompt templates are finalized, incorporating placeholders for transcription data</li>
-        <li>Prompts are tested with multiple LLM models to ensure consistency</li>
-        <li>A document is created explaining the rationale behind each prompt</li>
+        <li>The FusionChain class is implemented as per the provided code</li>
+        <li>A series of prompts is created for the report generation process</li>
+        <li>An evaluator function is implemented to score and rank model outputs</li>
+        <li>The Fusion Chain can process transcription data through multiple models</li>
+        <li>The system selects the best output based on the evaluator's scores</li>
+        <li>Proper error handling and logging are implemented for the Fusion Chain process</li>
+        <li>The Fusion Chain's performance is tested with various input scenarios</li>
+    </ul>
+
+    <h2>US-4.3: Develop Custom Prompts for Police Report Generation</h2>
+    <p><strong>As a</strong> developer,<br>
+    <strong>I want to</strong> develop a series of custom prompts for police report generation,<br>
+    <strong>So that</strong> the Fusion Chain can guide the LLMs to produce accurate and well-structured reports.</p>
+    <h3>Acceptance Criteria:</h3>
+    <ul>
+        <li>A series of prompts is created covering all aspects of a police report</li>
+        <li>Prompts utilize context and output back-referencing as supported by MinimalChainable</li>
+        <li>Prompts are designed to work effectively across different LLM models</li>
+        <li>Prompts are tested with sample transcription data to ensure they produce desired outputs</li>
+        <li>A document is created explaining the rationale behind each prompt in the series</li>
         <li>Prompts are reviewed and approved by a subject matter expert (if available)</li>
     </ul>
 
-    <h2>US-4.3: Implement Report Generation Backend</h2>
+    <h2>US-4.4: Implement Report Generation API Endpoint</h2>
     <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> implement the report generation backend using the Mixture-of-Agents approach with Ollama,<br>
-    <strong>So that</strong> we can create high-quality police reports from transcriptions.</p>
+    <strong>I want to</strong> implement an API endpoint for report generation using the Fusion Chain,<br>
+    <strong>So that</strong> the frontend can request report generation based on transcription data.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
-        <li>A Mixture-of-Agents architecture is implemented for report generation</li>
-        <li>The system can process transcription data and generate structured reports</li>
-        <li>Multiple LLM models are utilized in the generation process for improved quality</li>
-        <li>The generated reports adhere to specified police reporting standards</li>
-        <li>An API endpoint is created to receive transcription data and return generated reports</li>
-        <li>Proper error handling and logging are implemented for the report generation process</li>
+        <li>An API endpoint is created to receive transcription data and initiate report generation</li>
+        <li>The endpoint triggers the Fusion Chain process with the provided transcription data</li>
+        <li>The generated report is returned in a structured format (e.g., JSON)</li>
+        <li>The API includes options to specify which models to use in the Fusion Chain</li>
+        <li>Proper error handling is implemented for various failure scenarios</li>
+        <li>The API endpoint is documented with clear usage instructions and example requests/responses</li>
     </ul>
 
-    <h2>US-4.4: Integrate Frontend with Report Generation API</h2>
+    <h2>US-4.5: Integrate Frontend with Fusion Chain Report Generation API</h2>
     <p><strong>As a</strong> police officer,<br>
-    <strong>I want to</strong> generate a report from my transcribed audio,<br>
-    <strong>So that</strong> I can quickly create standardized police reports.</p>
+    <strong>I want to</strong> generate a report from my transcribed audio using the Fusion Chain,<br>
+    <strong>So that</strong> I can quickly create high-quality, standardized police reports.</p>
     <h3>Acceptance Criteria:</h3>
     <ul>
         <li>A "Generate Report" button is added to the frontend interface</li>
-        <li>Clicking the button sends the transcription data to the report generation API</li>
+        <li>Clicking the button sends the transcription data to the Fusion Chain report generation API</li>
         <li>A loading indicator is displayed while the report is being generated</li>
         <li>The generated report is displayed in a structured, readable format</li>
+        <li>The frontend allows users to view outputs from different models in the Fusion Chain</li>
         <li>Error handling is implemented for failed API calls</li>
         <li>The user is notified of successful report generation</li>
     </ul>
 
-    <h2>US-4.5: Implement Report Editing and Formatting</h2>
+    <h2>US-4.6: Implement Report Editing and Formatting</h2>
     <p><strong>As a</strong> police officer,<br>
     <strong>I want to</strong> edit and format the generated report,<br>
     <strong>So that</strong> I can make necessary adjustments before finalizing it.</p>
@@ -76,7 +93,7 @@
         <li>A "Save Changes" option is provided to update the report</li>
     </ul>
 
-    <h2>US-4.6: Implement PDF Export Functionality</h2>
+    <h2>US-4.7: Implement PDF Export Functionality</h2>
     <p><strong>As a</strong> police officer,<br>
     <strong>I want to</strong> export my generated report as a PDF,<br>
     <strong>So that</strong> I can easily share or print the final document.</p>
@@ -90,7 +107,7 @@
         <li>Error handling is implemented for PDF generation and download process</li>
     </ul>
 
-    <h2>US-4.7: Conduct Initial Testing of Full Workflow</h2>
+    <h2>US-4.8: Conduct Initial Testing of Full Workflow</h2>
     <p><strong>As a</strong> developer,<br>
     <strong>I want to</strong> conduct initial testing of the full application workflow,<br>
     <strong>So that</strong> we can identify and address any integration issues or bugs.</p>
@@ -98,24 +115,10 @@
     <ul>
         <li>A test plan is created covering the entire process from audio input to PDF export</li>
         <li>Multiple test scenarios are executed, including various audio inputs and edge cases</li>
-        <li>Integration between Groq transcription and report generation is thoroughly tested</li>
+        <li>Integration between Groq transcription and Fusion Chain report generation is thoroughly tested</li>
         <li>Performance metrics are collected for each step of the process</li>
         <li>Any identified bugs or issues are documented and prioritized for fixing</li>
         <li>A summary report of the testing process and results is created</li>
-    </ul>
-
-    <h2>US-4.8: Refine User Interface Based on Initial Feedback</h2>
-    <p><strong>As a</strong> developer,<br>
-    <strong>I want to</strong> refine the user interface based on initial testing and feedback,<br>
-    <strong>So that</strong> we can improve the overall user experience of the application.</p>
-    <h3>Acceptance Criteria:</h3>
-    <ul>
-        <li>Feedback is collected from initial testing and any available user testing</li>
-        <li>UI improvements are identified and prioritized</li>
-        <li>High-priority UI enhancements are implemented</li>
-        <li>The refined UI is tested for responsiveness and cross-browser compatibility</li>
-        <li>Accessibility improvements are made where necessary</li>
-        <li>Changes are documented and communicated to the team</li>
     </ul>
 </body>
 </html>
