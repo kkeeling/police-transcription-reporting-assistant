@@ -58,6 +58,13 @@ class TranscriptionResponse(BaseModel):
     text: str
     segments: List[dict]
 
+class ReportRequest(BaseModel):
+    transcription: str
+    report_type: str
+
+class ReportResponse(BaseModel):
+    report: str
+
 ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg', 'flac', 'm4a', 'mp4', 'mpeg', 'mpga', 'webm'}
 MAX_FILE_SIZE = 25 * 1024 * 1024  # 25 MB
 
@@ -278,4 +285,15 @@ async def get_documentation():
 @app.get("/redoc", include_in_schema=False)
 async def get_redoc_documentation():
     return get_redoc_html(openapi_url="/openapi.json", title="API Documentation")
+
+@app.post("/api/v1/generate_report", response_model=ReportResponse)
+@limiter.limit("5/minute")
+async def generate_report_endpoint(request: Request, report_request: ReportRequest):
+    try:
+        report = generate_report(report_request.transcription, report_request.report_type)
+        return {"report": report}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
