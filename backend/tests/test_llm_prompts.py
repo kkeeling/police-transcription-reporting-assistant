@@ -1,13 +1,12 @@
 import unittest
 import os
 import sys
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 # Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.llm_prompts import generate_user_prompt, generate_report, POLICE_REPORT_SYSTEM_PROMPT
-from src.ollama_client import OllamaClient
 
 class TestLLMPrompts(unittest.TestCase):
     def setUp(self):
@@ -31,21 +30,37 @@ class TestLLMPrompts(unittest.TestCase):
         with self.assertRaises(ValueError):
             generate_user_prompt(self.test_transcription, "Invalid Type")
 
-    @patch.object(OllamaClient, 'run_ollama_model')
-    def test_generate_report(self, mock_run_ollama_model):
-        mock_run_ollama_model.return_value = "This is a mock police report."
+    @patch('llm.get_model')
+    @patch('src.llm_prompts.FusionChain.run')
+    def test_generate_report(self, mock_fusion_chain_run, mock_get_model):
+        mock_model = MagicMock()
+        mock_get_model.side_effect = [mock_model, mock_model, mock_model]
         
-        report = generate_report(self.test_transcription, "General Occurrence", "llama3")
+        mock_fusion_chain_result = MagicMock()
+        mock_fusion_chain_result.top_response = "This is a mock police report."
+        mock_fusion_chain_run.return_value = mock_fusion_chain_result
+
+        report = generate_report(self.test_transcription, "General Occurrence")
         
         self.assertEqual(report, "This is a mock police report.")
-        mock_run_ollama_model.assert_called_once()
+        mock_get_model.assert_any_call("gemma2")
+        mock_get_model.assert_any_call("llama3.1")
+        mock_get_model.assert_any_call("mistral")
+        mock_fusion_chain_run.assert_called_once()
         
-        # Check that the prompt passed to run_ollama_model contains the necessary components
-        call_args = mock_run_ollama_model.call_args[0]
-        self.assertEqual(call_args[0], "llama3")
-        self.assertIn(POLICE_REPORT_SYSTEM_PROMPT, call_args[1])
-        self.assertIn(self.test_transcription, call_args[1])
-        self.assertIn("General Occurrence", call_args[1])
+        # Check that the FusionChain.run method was called with the correct arguments
+        call_args = mock_fusion_chain_run.call_args[1]
+        self.assertIn('context', call_args)
+        self.assertIn('models', call_args)
+        self.assertIn('callable', call_args)
+        self.assertIn('prompts', call_args)
+        self.assertIn('evaluator', call_args)
+        self.assertIn('get_model_name', call_args)
+        
+        # Check that the prompt contains the necessary components
+        user_prompt = call_args['prompts'][0]
+        self.assertIn(self.test_transcription, user_prompt)
+        self.assertIn("General Occurrence", user_prompt)
 
 if __name__ == '__main__':
     unittest.main()
