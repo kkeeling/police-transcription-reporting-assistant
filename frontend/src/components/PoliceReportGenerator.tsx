@@ -231,7 +231,10 @@ const PoliceReportGenerator: React.FC = () => {
       <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
         <div className="flex justify-between items-center mb-2">
           <h3 className="text-xl sm:text-2xl font-semibold text-white">Generated Report</h3>
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+          <Button 
+            className="bg-blue-500 hover:bg-blue-600 text-white"
+            disabled={!report}
+          >
             Edit
           </Button>
         </div>
