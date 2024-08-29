@@ -229,7 +229,12 @@ const PoliceReportGenerator: React.FC = () => {
         </div>
       </div>
       <div className="bg-gray-800 p-4 rounded-lg mt-6 relative">
-        <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-white">Generated Report</h3>
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-xl sm:text-2xl font-semibold text-white">Generated Report</h3>
+          <Button className="bg-blue-500 hover:bg-blue-600 text-white">
+            Edit
+          </Button>
+        </div>
         <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto relative">
           {isGeneratingReport && (
             <div className="absolute inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
