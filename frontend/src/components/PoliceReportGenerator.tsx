@@ -161,6 +161,12 @@ const PoliceReportGenerator: React.FC = () => {
     fileInputRef.current?.click();
   };
 
+  const getGenerateButtonText = () => {
+    if (isLoading) return 'Processing...';
+    if (isGeneratingReport) return 'Generating Report...';
+    return 'Generate Report';
+  };
+
   return (
     <div className="space-y-4 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-2xl sm:text-3xl font-bold mb-4">Police Report Generator</h2>
@@ -194,7 +200,7 @@ const PoliceReportGenerator: React.FC = () => {
           disabled={!transcription || isLoading}
           className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
-          {isLoading ? 'Processing...' : isGeneratingReport ? 'Generating Report...' : 'Generate Report'}
+          {getGenerateButtonText()}
         </Button>
       </div>
       {isRecording && (
