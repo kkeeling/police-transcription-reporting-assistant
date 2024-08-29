@@ -3,7 +3,6 @@ import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
 import ReactMarkdown from 'react-markdown';
-import ReactMarkdown from 'react-markdown';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
