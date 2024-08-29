@@ -228,7 +228,11 @@ const PoliceReportGenerator: React.FC = () => {
             </div>
           )}
           {transcription ? (
-            <p className="text-gray-200 whitespace-pre-wrap">{transcription}</p>
+            <textarea
+              value={transcription}
+              onChange={(e) => setTranscription(e.target.value)}
+              className="w-full h-full min-h-[200px] sm:min-h-[300px] bg-gray-700 text-gray-200 border-none resize-none focus:ring-0 p-2"
+            />
           ) : (
             <p className="text-gray-400 italic">
               Transcription will appear here...
