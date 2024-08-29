@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from "./ui/button";
-import { transcribeAudio, generateReport } from "../api/mockApiService";
-import { uploadAudio } from "../api/apiService";
+import { uploadAudio, generateReport } from "../api/apiService";
 import { Spinner } from "./ui/spinner";
 
 const PoliceReportGenerator: React.FC = () => {
@@ -116,17 +115,15 @@ const PoliceReportGenerator: React.FC = () => {
   };
 
   const handleGenerateReport = async () => {
-    if (audioBlob) {
+    if (transcription) {
       setIsLoading(true);
       setError(null);
+      setIsGeneratingReport(true);
       try {
-        const result = await transcribeAudio(audioBlob);
-        setTranscription(result);
-        setIsGeneratingReport(true);
-        const generatedReport = await generateReport(result);
-        setReport(generatedReport);
+        const result = await generateReport(transcription, "General Occurrence");
+        setReport(result.report);
       } catch (error) {
-        console.error("Transcription or report generation error:", error);
+        console.error("Report generation error:", error);
         setError("Failed to generate report. Please try again.");
       } finally {
         setIsLoading(false);
@@ -191,7 +188,7 @@ const PoliceReportGenerator: React.FC = () => {
         />
         <Button
           onClick={handleGenerateReport}
-          disabled={!audioBlob || isLoading}
+          disabled={!transcription || isLoading}
           className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
           {isLoading ? "Processing..." : isGeneratingReport ? "Generating Report..." : "Generate Report"}
