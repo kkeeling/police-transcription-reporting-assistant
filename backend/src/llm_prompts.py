@@ -49,8 +49,7 @@ def generate_user_prompt(transcription: str, report_type: str) -> str:
 
 def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
     """
-    Stub for the evaluator function.
-    This function will be implemented later to evaluate and score the outputs from different models.
+    Evaluate the outputs from different models and return the one most similar to the example report format.
 
     Args:
         outputs (List[str]): List of outputs from different models.
@@ -58,8 +57,19 @@ def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
     Returns:
         tuple[str, List[float]]: A tuple containing the top response and a list of scores for each output.
     """
-    # For now, we'll just return the first output as the top response and equal scores for all outputs
-    return outputs[2], [1.0] * len(outputs)
+    with open(example_report_path, 'r') as file:
+        example_report = file.read().strip()
+
+    scores = []
+    for output in outputs:
+        # Calculate a simple similarity score based on shared lines
+        output_lines = set(output.split('\n'))
+        example_lines = set(example_report.split('\n'))
+        similarity = len(output_lines.intersection(example_lines)) / len(example_lines)
+        scores.append(similarity)
+
+    top_index = scores.index(max(scores))
+    return outputs[top_index], scores
 
 def build_models():
     load_dotenv()
