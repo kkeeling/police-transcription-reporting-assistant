@@ -59,25 +59,16 @@ def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
         tuple[str, List[float]]: A tuple containing the top response and a list of scores for each output.
     """
     # For now, we'll just return the first output as the top response and equal scores for all outputs
-    return outputs[0], [1.0] * len(outputs)
+    return outputs[2], [1.0] * len(outputs)
 
 def build_models():
     load_dotenv()
 
-    ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    mixtral_model: llm.Model = llm.get_model("groq-mixtral")
+    gemma_model: llm.Model = llm.get_model("groq-gemma2")
+    groq_llama3_1_405b_model: llm.Model = llm.get_model("groq-llama3.1-70b")
 
-    sonnet_3_5_model: llm.Model = llm.get_model("claude-3.5-sonnet")
-    sonnet_3_5_model.key = ANTHROPIC_API_KEY
-
-    openai_4omini_model: llm.Model = llm.get_model("4o")
-    openai_4omini_model.key = OPENAI_API_KEY
-
-    groq_llama3_1_405b_model: llm.Model = llm.get_model("groq-llama3.1-405b")
-    groq_llama3_1_405b_model.key = GOOGLE_API_KEY
-
-    return [sonnet_3_5_model, openai_4omini_model, groq_llama3_1_405b_model]
+    return [mixtral_model, gemma_model, groq_llama3_1_405b_model]
 
 def generate_report(transcription: str, report_type: str) -> str:
     """
