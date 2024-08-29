@@ -3,7 +3,6 @@ import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
 import ReactMarkdown from 'react-markdown';
-import { Textarea } from './ui/textarea';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -255,10 +254,10 @@ const PoliceReportGenerator: React.FC = () => {
           )}
           {report ? (
             isEditing ? (
-              <Textarea
+              <textarea
                 value={report}
                 onChange={(e) => setReport(e.target.value)}
-                className="w-full h-full bg-gray-800 text-gray-200 border-none resize-none focus:ring-0"
+                className="w-full h-full bg-gray-800 text-gray-200 border-none resize-none focus:ring-0 p-2"
               />
             ) : (
               <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
