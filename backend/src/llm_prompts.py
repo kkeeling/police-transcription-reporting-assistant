@@ -69,6 +69,7 @@ def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
         scores.append(similarity)
 
     top_index = scores.index(max(scores))
+    print(f"Chosen output: {top_index + 1} (Score: {scores[top_index]:.4f})")
     return outputs[top_index], scores
 
 def build_models():
