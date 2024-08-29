@@ -258,7 +258,7 @@ const PoliceReportGenerator: React.FC = () => {
               <textarea
                 value={report}
                 onChange={(e) => setReport(e.target.value)}
-                className="w-full h-full bg-gray-800 text-gray-200 border-none resize-none focus:ring-0 p-2"
+                className="w-full h-full min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] bg-gray-800 text-gray-200 border-none resize-none focus:ring-0 p-2 overflow-y-auto"
               />
             ) : (
               <Suspense fallback={<div>Loading...</div>}>
