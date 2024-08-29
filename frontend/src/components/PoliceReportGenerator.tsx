@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
-import { Button } from "./ui/button";
-import { uploadAudio, generateReport } from "../api/apiService";
-import { Spinner } from "./ui/spinner";
+import { Button } from './ui/button';
+import { uploadAudio, generateReport } from '../api/apiService';
+import { Spinner } from './ui/spinner';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -191,7 +191,7 @@ const PoliceReportGenerator: React.FC = () => {
           disabled={!transcription || isLoading}
           className="bg-white hover:bg-gray-100 text-black w-full sm:w-auto"
         >
-          {isLoading ? "Processing..." : isGeneratingReport ? "Generating Report..." : "Generate Report"}
+          {isLoading ? 'Processing...' : isGeneratingReport ? 'Generating Report...' : 'Generate Report'}
         </Button>
       </div>
       {isRecording && (
