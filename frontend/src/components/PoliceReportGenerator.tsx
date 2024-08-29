@@ -3,6 +3,7 @@ import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
 import ReactMarkdown from 'react-markdown';
+import { Textarea } from './ui/textarea';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -13,6 +14,7 @@ const PoliceReportGenerator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const websocketRef = useRef<WebSocket | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -234,8 +236,9 @@ const PoliceReportGenerator: React.FC = () => {
           <Button 
             className="bg-blue-500 hover:bg-blue-600 text-white"
             disabled={!report}
+            onClick={() => setIsEditing(!isEditing)}
           >
-            Edit
+            {isEditing ? 'Done' : 'Edit'}
           </Button>
         </div>
         <div className="bg-gray-700 p-4 rounded-lg min-h-[200px] sm:min-h-[300px] max-h-[400px] sm:max-h-[500px] overflow-y-auto relative">
@@ -245,9 +248,17 @@ const PoliceReportGenerator: React.FC = () => {
             </div>
           )}
           {report ? (
-            <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
-              {report}
-            </ReactMarkdown>
+            isEditing ? (
+              <Textarea
+                value={report}
+                onChange={(e) => setReport(e.target.value)}
+                className="w-full h-full bg-gray-800 text-gray-200 border-none resize-none focus:ring-0"
+              />
+            ) : (
+              <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
+                {report}
+              </ReactMarkdown>
+            )
           ) : (
             <p className="text-gray-400 italic">
               Generated report will appear here...
