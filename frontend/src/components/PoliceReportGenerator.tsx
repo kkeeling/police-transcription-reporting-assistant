@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
+import ReactMarkdown from 'react-markdown';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -236,7 +237,9 @@ const PoliceReportGenerator: React.FC = () => {
             </div>
           )}
           {report ? (
-            <p className="text-gray-200 whitespace-pre-wrap">{report}</p>
+            <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
+              {report}
+            </ReactMarkdown>
           ) : (
             <p className="text-gray-400 italic">
               Generated report will appear here...
