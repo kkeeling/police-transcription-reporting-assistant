@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
 import ReactMarkdown from 'react-markdown';
-import { Textarea } from './ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
