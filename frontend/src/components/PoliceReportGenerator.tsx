@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent, lazy, Suspense } from 'react';
 import { Button } from './ui/button';
 import { uploadAudio, generateReport } from '../api/apiService';
 import { Spinner } from './ui/spinner';
-import ReactMarkdown from 'react-markdown';
+
+const ReactMarkdown = lazy(() => import('react-markdown'));
 
 const PoliceReportGenerator: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -260,9 +261,11 @@ const PoliceReportGenerator: React.FC = () => {
                 className="w-full h-full bg-gray-800 text-gray-200 border-none resize-none focus:ring-0 p-2"
               />
             ) : (
-              <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
-                {report}
-              </ReactMarkdown>
+              <Suspense fallback={<div>Loading...</div>}>
+                <ReactMarkdown className="text-gray-200 prose prose-invert max-w-none">
+                  {report}
+                </ReactMarkdown>
+              </Suspense>
             )
           ) : (
             <p className="text-gray-400 italic">
