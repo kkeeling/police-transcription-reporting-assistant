@@ -3,6 +3,7 @@ This module contains system and user prompts for LLMs used in police report gene
 """
 
 import os
+from dotenv import load_dotenv
 import llm
 from .chain import FusionChain
 from typing import List, Dict, Any
