@@ -21,4 +21,4 @@ dependencies:
       - python-dotenv>=1.0.1
       - slowapi>=0.1.8
       - llm
-      - llm-ollama
+      - llm-groq

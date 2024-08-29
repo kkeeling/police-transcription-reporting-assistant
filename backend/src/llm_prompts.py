@@ -60,6 +60,24 @@ def evaluator(outputs: List[str]) -> tuple[str, List[float]]:
     # For now, we'll just return the first output as the top response and equal scores for all outputs
     return outputs[0], [1.0] * len(outputs)
 
+def build_models():
+    load_dotenv()
+
+    ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
+    sonnet_3_5_model: llm.Model = llm.get_model("claude-3.5-sonnet")
+    sonnet_3_5_model.key = ANTHROPIC_API_KEY
+
+    openai_4omini_model: llm.Model = llm.get_model("4o")
+    openai_4omini_model.key = OPENAI_API_KEY
+
+    groq_llama3_1_405b_model: llm.Model = llm.get_model("groq-llama3.1-405b")
+    groq_llama3_1_405b_model.key = GOOGLE_API_KEY
+
+    return [sonnet_3_5_model, openai_4omini_model, groq_llama3_1_405b_model]
+
 def generate_report(transcription: str, report_type: str) -> str:
     """
     Generate a police report using FusionChain with multiple LLM models.
@@ -74,11 +92,7 @@ def generate_report(transcription: str, report_type: str) -> str:
     user_prompt = generate_user_prompt(transcription, report_type)
     
     # Create models
-    models = [
-        llm.get_model("gemma2"),
-        llm.get_model("llama3.1"),
-        llm.get_model("mistral")
-    ]
+    models = build_models()
 
     def prompt_model(model: Any, prompt: str) -> str:
         return model.prompt(prompt, system=POLICE_REPORT_SYSTEM_PROMPT).text()
